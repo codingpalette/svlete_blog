@@ -1,4 +1,7 @@
 <script>
+  import Header from "../components/Header.svelte";
+  export let segment;
+
   import Button from "sveltestrap/src/Button.svelte";
   import Col from "sveltestrap/src/Col.svelte";
   import Row from "sveltestrap/src/Row.svelte";
@@ -44,6 +47,8 @@
   <title>Sapper project template</title>
 </svelte:head>
 
+<Header {segment} />
+
 <h1>Great success!!!!!</h1>
 
 <figure>
@@ -60,3 +65,259 @@
 <Col>
   <Button color="primary" outline>Hello World!</Button>
 </Col>
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />
+1
+<br />

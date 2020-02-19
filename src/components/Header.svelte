@@ -214,6 +214,12 @@
           </a>
         </li>
         <li>
+          <a class:selected={segment === 'login'} href="login">
+            <i class="fas fa-address-card fa-lg" />
+            <span>login</span>
+          </a>
+        </li>
+        <li>
           <a class:selected={segment === 'blog'} href="blog">
             <i class="fas fa-clone fa-lg" />
             <span>Post</span>

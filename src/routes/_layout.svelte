@@ -1,24 +1,23 @@
 <script>
-  import Nav from "../components/Nav.svelte";
-  import Header from "../components/Header.svelte";
-
-  export let segment;
+  import UserObserver from "../components/UserObserver.svelte";
 </script>
 
 <style>
-  main {
+  /* main {
     position: relative;
-    max-width: 56em;
-    background-color: white;
-    padding: 2em;
-    margin: 0 auto;
+    padding: 50px 0;
     box-sizing: border-box;
   }
+
+  @media (min-width: 768px) {
+    main {
+      padding: 0;
+      padding-left: 250px;
+    }
+  } */
 </style>
 
-<Header {segment} />
-
-<Nav {segment} />
+<UserObserver />
 
 <main>
   <slot />
