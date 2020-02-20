@@ -19,8 +19,8 @@
       const res = await firebase
         .auth()
         .signInWithEmailAndPassword(authForm.email, authForm.password);
-      console.log(res);
-      location.href = "/";
+      // console.log(res);
+      goto("/");
     } catch (e) {
       console.log(e);
     }

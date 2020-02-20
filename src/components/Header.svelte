@@ -145,7 +145,7 @@
     }
     .desk_nav_box nav li a span {
       margin-left: 10px;
-      font-size: 0.8rem;
+      font-size: 1rem;
       font-weight: 600;
       line-height: 1;
     }

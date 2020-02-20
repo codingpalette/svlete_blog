@@ -44,7 +44,11 @@ a:hover {
   text-decoration: none;
   opacity: 0.75;
 }
-
+button {
+  border: 0 none;
+  background-color: transparent;
+  cursor: pointer;
+}
 dl,
 ul,
 ol,
