@@ -29,7 +29,7 @@ exports.createUser = functions.auth.user().onCreate(async user => {
     displayName,
     emailVerified,
     photoURL,
-    disabled,
+    disabled
   };
 
   const r = await db

@@ -6,10 +6,8 @@
   import LinkBox from "../components/auth/LinkBox.svelte";
 
   if ($currentUser) goto("/");
-  const MyUrl = "login";
-  const Link = "signup";
-
-  // console.log(location);
+  const MyUrl = "signup";
+  const Link = "login";
 </script>
 
 <style>
@@ -40,7 +38,7 @@
 </style>
 
 <svelte:head>
-  <title>로그인</title>
+  <title>회원가입</title>
 </svelte:head>
 
 {#if !$currentUser}
