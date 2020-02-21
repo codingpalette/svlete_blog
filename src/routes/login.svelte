@@ -38,6 +38,11 @@
     padding: 30px 15px 15px;
     box-sizing: border-box;
   }
+  .home_link {
+    text-align: center;
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+  }
 </style>
 
 <svelte:head>
@@ -47,6 +52,9 @@
 {#if !$currentUser}
   <div class="auth_container">
     <div class="auth_content">
+      <h2 class="home_link">
+        <a href="/">codingpalette</a>
+      </h2>
       <FormBox {MyUrl} />
       <LinkBox {Link} />
       <Social />

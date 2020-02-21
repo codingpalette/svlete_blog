@@ -10,11 +10,24 @@
 
   const authForm = {
     email: "",
-    password: ""
+    password: "",
+    password2: ""
   };
 
   const handleSubmit = async event => {
     try {
+      if (authForm.email === "") {
+        alert("이메일 주소를 입력해 주세요.");
+        return false;
+      }
+      if (authForm.password.length < 6) {
+        alert("비밀번호를 6자리 이상 입력해주세요.");
+        return false;
+      }
+      if (MyUrl === "signup" && authForm.password !== authForm.password2) {
+        alert("비밀번호가 서로 맞지 않습니다.");
+        return false;
+      }
       if (MyUrl === "login") {
         await firebase
           .auth()
@@ -51,7 +64,11 @@
   </FormGroup>
   {#if MyUrl === 'signup'}
     <FormGroup>
-      <Input type="password" id="password2" placeholder="비밀번호" />
+      <Input
+        type="password"
+        id="password2"
+        placeholder="비밀번호 확인"
+        bind:value={authForm.password2} />
     </FormGroup>
   {/if}
   <FormGroup>
