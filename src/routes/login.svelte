@@ -4,6 +4,7 @@
 
   import FormBox from "../components/auth/FormBox.svelte";
   import LinkBox from "../components/auth/LinkBox.svelte";
+  import Social from "../components/auth/Social.svelte";
 
   if ($currentUser) goto("/");
   const MyUrl = "login";
@@ -48,7 +49,7 @@
     <div class="auth_content">
       <FormBox {MyUrl} />
       <LinkBox {Link} />
-
+      <Social />
     </div>
   </div>
 {/if}

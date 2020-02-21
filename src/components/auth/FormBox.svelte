@@ -13,7 +13,7 @@
     password: ""
   };
 
-  async function handleSubmit(event) {
+  const handleSubmit = async event => {
     try {
       if (MyUrl === "login") {
         await firebase
@@ -31,7 +31,7 @@
     } catch (e) {
       console.log(e);
     }
-  }
+  };
 </script>
 
 <form on:submit|preventDefault={handleSubmit}>
