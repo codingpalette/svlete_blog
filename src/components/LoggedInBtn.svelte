@@ -47,6 +47,8 @@
     outline: none;
     color: inherit;
     padding: 3px 0;
+    width: 100%;
+    text-align: right;
   }
 
   .logged_in_btn_container ul li button:hover {
@@ -83,6 +85,9 @@
   <ul class:active>
     <li>
       <a href="/">관리자</a>
+    </li>
+    <li>
+      <a href="/post_write">포스트 작성</a>
     </li>
     <li>
       <button on:click={logoutClick}>로그아웃</button>

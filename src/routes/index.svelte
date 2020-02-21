@@ -66,7 +66,7 @@
       // console.log(res);
       items = res.docs.map(e => e.data());
       LastPost = res.docs[res.docs.length - 1];
-      console.log(items);
+      // console.log(items);
     } catch (e) {
       // console.log(e);
     }
