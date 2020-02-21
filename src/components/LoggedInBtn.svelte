@@ -20,10 +20,11 @@
   .logged_in_btn_container {
     position: fixed;
     right: 10px;
-    bottom: 10px;
+    bottom: 60px;
     display: flex;
     flex-direction: column;
     align-items: flex-end;
+    z-index: 1100;
   }
 
   .logged_in_btn_container ul {
@@ -69,6 +70,12 @@
   }
   .toggle_btn.active {
     transform: rotate(45deg);
+  }
+
+  @media (min-width: 768px) {
+    .logged_in_btn_container {
+      bottom: 10px;
+    }
   }
 </style>
 
