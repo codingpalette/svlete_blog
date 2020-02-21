@@ -1,6 +1,9 @@
 <script>
   import { onMount } from "svelte";
+
   import Header from "../components/Header.svelte";
+  import TransitionWrapper from "../components/TransitionWrapper.svelte";
+
   export let segment;
 
   import Button from "sveltestrap/src/Button.svelte";
@@ -63,6 +66,7 @@
       // console.log(res);
       items = res.docs.map(e => e.data());
       LastPost = res.docs[res.docs.length - 1];
+      console.log(items);
     } catch (e) {
       // console.log(e);
     }
@@ -91,29 +95,30 @@
 
 <Header {segment} />
 
-<div class="main_container">
-  <Container>
-    <Row>
-      <Col xs="12">
-        {#each items as item}
-          <Card class="mb-4 shadow border-0 rounded-lg">
-            <a href="/">
-              <div class="card_title_box">
-                <h2>{item.title}</h2>
-              </div>
-              <CardBody>
-                <CardText>
-                  Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                  Pariatur nesciunt harum incidunt expedita, quis a, esse et cum
-                  hic assumenda sequi dignissimos exercitationem inventore
-                  cumque libero beatae fuga suscipit labore!
-                </CardText>
-              </CardBody>
-            </a>
-          </Card>
-        {/each}
-      </Col>
-    </Row>
-  </Container>
-
-</div>
+<TransitionWrapper>
+  <div class="main_container">
+    <Container>
+      <Row>
+        <Col xs="12">
+          {#each items as item}
+            <Card class="mb-4 shadow border-0 rounded-lg">
+              <a href={`post/${item.category}/${item.url}`}>
+                <div class="card_title_box">
+                  <h2>{item.title}</h2>
+                </div>
+                <CardBody>
+                  <CardText>
+                    Lorem ipsum dolor sit amet consectetur, adipisicing elit.
+                    Pariatur nesciunt harum incidunt expedita, quis a, esse et
+                    cum hic assumenda sequi dignissimos exercitationem inventore
+                    cumque libero beatae fuga suscipit labore!
+                  </CardText>
+                </CardBody>
+              </a>
+            </Card>
+          {/each}
+        </Col>
+      </Row>
+    </Container>
+  </div>
+</TransitionWrapper>
