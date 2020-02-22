@@ -1,5 +1,6 @@
 <script>
   import { onMount } from "svelte";
+  import { fly } from "svelte/transition";
 
   onMount(() => {
     console.log(window.location);
@@ -14,6 +15,10 @@
   import FormGroup from "sveltestrap/src/FormGroup.svelte";
   import Input from "sveltestrap/src/Input.svelte";
   import Label from "sveltestrap/src/Label.svelte";
+  import Card from "sveltestrap/src/Card.svelte";
+  import CardBody from "sveltestrap/src/CardBody.svelte";
+  import CardText from "sveltestrap/src/CardText.svelte";
+  import Button from "sveltestrap/src/Button.svelte";
 
   let modalOpen = false;
 
@@ -90,6 +95,9 @@
     top: 0;
     bottom: 0;
     z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .modal_back {
@@ -99,6 +107,37 @@
     top: 0;
     bottom: 0;
     background-color: rgba(0, 0, 0, 0.7);
+    z-index: 100;
+  }
+
+  .modal_content {
+    position: relative;
+    margin: auto;
+    z-index: 200;
+    padding: 1rem;
+    width: 320px;
+  }
+
+  .modal_content .card_title_box {
+    padding: 1.25rem;
+    border-bottom: 1px solid #edf1f7;
+  }
+
+  .modal_content .card_title_box strong {
+    font-size: 1.2rem;
+    font-weight: bold;
+    display: block;
+  }
+
+  .modal_content .card_footer_box {
+    padding: 1.25rem;
+    border-top: 1px solid #edf1f7;
+    display: flex;
+    justify-content: center;
+  }
+
+  :global(.modal_content .card_footer_box button) {
+    margin: 0 5px;
   }
 
   @media (min-width: 768px) {
@@ -147,7 +186,7 @@
           type="text"
           name="title"
           id="title"
-          placeholder="제목을 입력해 주세요." />
+          placeholder="제목을 입력해주세요." />
       </FormGroup>
       <FormGroup>
         <Label for="category" class="label">카테고리</Label>
@@ -157,6 +196,24 @@
           <option>javascript</option>
         </Input>
       </FormGroup>
+      <FormGroup>
+        <Label for="url" class="label">URL*</Label>
+        <Input
+          type="text"
+          name="url"
+          id="url"
+          placeholder="url을 입력해주세요." />
+      </FormGroup>
+      <FormGroup>
+        <Label for="description" class="label">포스트 소개*</Label>
+        <Input
+          type="textarea"
+          name="description"
+          id="description"
+          rows="3"
+          maxlength="150"
+          placeholder="포스트를 짧게 작성해주세요." />
+      </FormGroup>
       <div id="editor-container" />
     </div>
   </Container>
@@ -164,8 +221,25 @@
 
 {#if modalOpen}
   <div class="modal_container">
+    <div
+      class="modal_content"
+      in:fly={{ y: -50, duration: 1000 }}
+      out:fly={{ y: 50, duration: 700 }}>
+      <Card class="shadow border-0 rounded-lg">
+        <div class="card_title_box">
+          <strong>포스트 작성</strong>
+        </div>
+        <CardBody>
+          <CardText>포스트를 작성 하시겠습니까?</CardText>
+        </CardBody>
+        <div class="card_footer_box">
+          <Button color="danger" on:click={modalToggle}>취소</Button>
+          <Button color="primary">확인</Button>
+        </div>
+      </Card>
 
-    <div class="modal_back" />
+    </div>
+    <div class="modal_back" on:click={modalToggle} />
   </div>
 {/if}
 
@@ -173,8 +247,7 @@
   <Container>
     <Row>
       <Col>
-        <div class="write_container">sdfsdf</div>
-
+        <div class="write_container">asdsadad</div>
       </Col>
     </Row>
   </Container>
