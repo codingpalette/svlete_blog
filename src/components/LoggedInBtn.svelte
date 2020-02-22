@@ -24,7 +24,7 @@
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-    z-index: 1100;
+    z-index: 600;
   }
 
   .logged_in_btn_container ul {

@@ -20,7 +20,7 @@
   header,
   footer {
     background-color: #fff;
-    z-index: 1000;
+    z-index: 500;
   }
 
   .modile_header,
@@ -108,7 +108,7 @@
       width: 250px;
       background-color: #fff;
       border-right: 1px solid #edf1f7;
-      z-index: 1000;
+      z-index: 500;
       height: 100%;
       padding: 15px 0;
       box-sizing: border-box;
