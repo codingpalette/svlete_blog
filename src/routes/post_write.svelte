@@ -1,6 +1,7 @@
 <script>
   import { onMount } from "svelte";
   import { fly } from "svelte/transition";
+  import { goto } from "@sapper/app";
 
   onMount(() => {
     console.log(window.location);
@@ -19,21 +20,97 @@
   import CardBody from "sveltestrap/src/CardBody.svelte";
   import CardText from "sveltestrap/src/CardText.svelte";
   import Button from "sveltestrap/src/Button.svelte";
+  import Spinner from "sveltestrap/src/Spinner.svelte";
+
+  import { firebase } from "@firebase/app";
+
+  let quillEditor;
 
   let modalOpen = false;
+  let isCardLoading = false;
+  let isCardOk = false;
+  let isCardError = false;
 
-  const modalToggle = () => (modalOpen = !modalOpen);
+  const modalToggle = () => {
+    modalOpen = !modalOpen;
+    isCardLoading = false;
+    isCardOk = false;
+    isCardError = false;
+  };
+
+  const postOklink = () => {
+    goto("/");
+  };
+
+  let formData = {
+    title: "",
+    category: "",
+    url: "",
+    description: "",
+    tags: []
+  };
+
+  const subMitEvent = async () => {
+    console.log(formData);
+    console.log(quillEditor.root.innerHTML);
+    isCardLoading = !isCardLoading;
+
+    const today = new Date();
+
+    let dd = today.getDate();
+    let mm = today.getMonth() + 1; //January is 0!
+    const yyyy = today.getFullYear();
+
+    if (dd < 10) {
+      dd = "0" + dd;
+    }
+
+    if (mm < 10) {
+      mm = "0" + mm;
+    }
+    const date = yyyy + "-" + mm + "-" + dd;
+    const createdAt = today;
+    const modifiedAt = today;
+
+    const { title, category, url, description, tags } = formData;
+    const content = quillEditor.root.innerHTML;
+    const id = category + "_" + url;
+
+    try {
+      // await someFuncThatThrowsAnError();
+      await firebase
+        .firestore()
+        .collection("docs")
+        .doc(id)
+        .set({ title, category, url, description, tags, createdAt, date });
+
+      const cid = id + "/content/last";
+
+      await firebase
+        .firestore()
+        .collection("docs")
+        .doc(cid)
+        .set({ createdAt, modifiedAt, content });
+      isCardOk = true;
+      console.log("isCardOk", isCardOk);
+    } catch (e) {
+      console.log("aaa");
+      console.log(e);
+      isCardError = true;
+    }
+  };
 
   onMount(async () => {
     import("quill/dist/quill.snow.css");
     const quillMoule = await import("quill/dist/quill.js");
     const Quill = quillMoule.default;
-    var quill = new Quill("#editor-container", {
+    quillEditor = new Quill("#editor-container", {
       modules: {
         toolbar: [
-          [{ header: [1, 2, false] }],
-          ["bold", "italic", "underline"],
-          ["image", "code-block"]
+          [{ header: "1" }, { header: "2" }],
+          ["bold", "italic", "underline", "strike"],
+          [{ list: "ordered" }, { list: "bullet" }],
+          ["blockquote", "code-block", "link", "image"]
         ]
       },
       placeholder: "Compose an epic...",
@@ -88,6 +165,25 @@
     color: #8992a3;
   }
 
+  .form_category {
+    display: block;
+    width: 100%;
+    height: calc(1.5em + 0.75rem + 2px);
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  }
+  .form_category:focus {
+    outline: none;
+  }
+
   .modal_container {
     position: fixed;
     left: 0;
@@ -115,7 +211,8 @@
     margin: auto;
     z-index: 200;
     padding: 1rem;
-    width: 320px;
+    max-width: 350px;
+    width: 100%;
   }
 
   .modal_content .card_title_box {
@@ -136,8 +233,25 @@
     justify-content: center;
   }
 
+  .card_loading_text {
+    margin-top: 1rem;
+    font-size: 0.8rem;
+  }
+
+  :global(.card_loading_box) {
+    min-height: 186.5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  }
+
   :global(.modal_content .card_footer_box button) {
     margin: 0 5px;
+  }
+
+  :global(.ql-editor) {
+    min-height: 250px;
   }
 
   @media (min-width: 768px) {
@@ -186,15 +300,21 @@
           type="text"
           name="title"
           id="title"
+          bind:value={formData.title}
           placeholder="제목을 입력해주세요." />
       </FormGroup>
       <FormGroup>
         <Label for="category" class="label">카테고리</Label>
-        <Input type="select" name="category" id="category">
-          <option>html</option>
-          <option>css</option>
-          <option>javascript</option>
-        </Input>
+        <select
+          type="select"
+          name="category"
+          id="category"
+          class="form_category"
+          bind:value={formData.category}>
+          <option value="html">html</option>
+          <option value="css">css</option>
+          <option value="javascript">javascript</option>
+        </select>
       </FormGroup>
       <FormGroup>
         <Label for="url" class="label">URL*</Label>
@@ -202,6 +322,7 @@
           type="text"
           name="url"
           id="url"
+          bind:value={formData.url}
           placeholder="url을 입력해주세요." />
       </FormGroup>
       <FormGroup>
@@ -212,6 +333,7 @@
           id="description"
           rows="3"
           maxlength="150"
+          bind:value={formData.description}
           placeholder="포스트를 짧게 작성해주세요." />
       </FormGroup>
       <div id="editor-container" />
@@ -226,16 +348,48 @@
       in:fly={{ y: -50, duration: 1000 }}
       out:fly={{ y: 50, duration: 700 }}>
       <Card class="shadow border-0 rounded-lg">
-        <div class="card_title_box">
-          <strong>포스트 작성</strong>
-        </div>
-        <CardBody>
-          <CardText>포스트를 작성 하시겠습니까?</CardText>
-        </CardBody>
-        <div class="card_footer_box">
-          <Button color="danger" on:click={modalToggle}>취소</Button>
-          <Button color="primary">확인</Button>
-        </div>
+        {#if !isCardLoading}
+          <div class="card_title_box">
+            <strong>포스트 작성</strong>
+          </div>
+          <CardBody class="text-center">
+            <CardText>포스트를 작성 하시겠습니까?</CardText>
+          </CardBody>
+          <div class="card_footer_box">
+            <Button color="danger" on:click={modalToggle}>취소</Button>
+            <Button color="primary" on:click={subMitEvent}>확인</Button>
+          </div>
+        {:else if !isCardOk && !isCardError}
+          <CardBody class="text-center card_loading_box">
+            <CardText>
+              <Spinner color="primary" />
+            </CardText>
+            <p class="card_loading_text">포스트 작성중...</p>
+          </CardBody>
+        {:else if isCardOk && !isCardError}
+          <div class="card_title_box">
+            <strong>포스트 작성</strong>
+          </div>
+          <CardBody class="text-center">
+            <CardText class="text-success">포스트작성을 완료했습니다.</CardText>
+          </CardBody>
+          <div class="card_footer_box">
+            <Button color="primary" on:click={postOklink}>확인</Button>
+          </div>
+        {:else if !isCardOk && isCardError}
+          <div class="card_title_box">
+            <strong>포스트 작성</strong>
+          </div>
+          <CardBody class="text-center">
+            <CardText class="text-danger">
+              포스트가 등록되지 않았습니다.
+            </CardText>
+            <CardText class="text-danger">다시 시도해주세요.</CardText>
+          </CardBody>
+          <div class="card_footer_box">
+            <Button color="danger" on:click={modalToggle}>확인</Button>
+          </div>
+        {/if}
       </Card>
 
     </div>
