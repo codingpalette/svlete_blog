@@ -1,6 +1,7 @@
 <script>
   import { onMount } from "svelte";
   import Header from "../../../components/Header.svelte";
+  import TransitionWrapper from "../../../components/TransitionWrapper.svelte";
   export let segment;
 
   import Container from "sveltestrap/src/Container.svelte";
@@ -98,14 +99,14 @@
       <h1>{viewContent.title}</h1>
       <span class="date_box">{viewContent.date}</span>
     </div>
-
   </div>
-
-  <div class="view_container ql-snow">
-    <Container>
-      <div class="view_content ql-editor shadow rounded-lg">
-        {@html viewContent.content}
-      </div>
-    </Container>
-  </div>
+  <TransitionWrapper>
+    <div class="view_container ql-snow">
+      <Container>
+        <div class="view_content ql-editor shadow rounded-lg">
+          {@html viewContent.content}
+        </div>
+      </Container>
+    </div>
+  </TransitionWrapper>
 {/if}

@@ -48,10 +48,24 @@
     category: "html",
     url: "",
     description: "",
-    tags: []
+    tags: ["aa", "bb", "cc"]
   };
 
-  const subMitEvent = async () => {
+  let tag = "";
+  const tagSubmit = () => {
+    const tagText = tag.trim();
+    if (!tagText) return; // 공백이라면 추가하지 않음
+    if (formData.tags.includes(tagText)) return; // 이미 존재한다면 추가하지 않음
+    formData.tags = [tagText, ...formData.tags];
+    tag = "";
+  };
+
+  const tagRemove = tag => {
+    const newTag = formData.tags.filter(i => i !== tag);
+    formData.tags = newTag;
+  };
+
+  const submitEvent = async () => {
     // console.log(formData);
     // console.log(quillEditor.root.innerHTML);
     isCardLoading = !isCardLoading;
@@ -243,6 +257,21 @@
     font-size: 0.8rem;
   }
 
+  .tag_btn {
+    padding: 10px 15px;
+    background-color: #edf2f7;
+    font-size: 1rem;
+    color: #4a5568;
+    line-height: 1;
+    border-radius: 15px;
+    margin-right: 10px;
+    margin-top: 10px;
+    cursor: pointer;
+  }
+  .tag_btn:hover {
+    opacity: 0.8;
+  }
+
   :global(.card_loading_box) {
     min-height: 186.5px;
     display: flex;
@@ -342,6 +371,26 @@
           bind:value={formData.description}
           placeholder="포스트를 짧게 작성해주세요." />
       </FormGroup>
+      <FormGroup>
+        <Label for="tag" class="label">태그</Label>
+        <form on:submit|preventDefault={tagSubmit}>
+          <Input
+            type="text"
+            name="tag"
+            id="tag"
+            bind:value={tag}
+            placeholder="태그를 입력해주세요." />
+        </form>
+        <ul>
+          <li>
+            {#each formData.tags as tags}
+              <button class="tag_btn" on:click={() => tagRemove(tags)}>
+                {tags}
+              </button>
+            {/each}
+          </li>
+        </ul>
+      </FormGroup>
       <div id="editor-container" />
     </div>
   </Container>
@@ -363,7 +412,7 @@
           </CardBody>
           <div class="card_footer_box">
             <Button color="danger" on:click={modalToggle}>취소</Button>
-            <Button color="primary" on:click={subMitEvent}>확인</Button>
+            <Button color="primary" on:click={submitEvent}>확인</Button>
           </div>
         {:else if !isCardOk && !isCardError}
           <CardBody class="text-center card_loading_box">
@@ -402,14 +451,3 @@
     <div class="modal_back" />
   </div>
 {/if}
-
-<div class="main_container">
-  <Container>
-    <Row>
-      <Col>
-        <div class="write_container">asdsadad</div>
-      </Col>
-    </Row>
-  </Container>
-
-</div>
