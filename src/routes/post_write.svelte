@@ -44,7 +44,7 @@
 
   let formData = {
     title: "",
-    category: "",
+    category: "html",
     url: "",
     description: "",
     tags: []
@@ -393,7 +393,7 @@
       </Card>
 
     </div>
-    <div class="modal_back" on:click={modalToggle} />
+    <div class="modal_back" />
   </div>
 {/if}
 
