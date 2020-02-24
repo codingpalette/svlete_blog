@@ -101,7 +101,7 @@
   };
 
   onMount(async () => {
-    import("quill/dist/quill.snow.css");
+    // import("quill/dist/quill.snow.css");
     const quillMoule = await import("quill/dist/quill.js");
     const Quill = quillMoule.default;
     quillEditor = new Quill("#editor-container", {
@@ -252,6 +252,7 @@
 
   :global(.ql-editor) {
     min-height: 250px;
+    color: #222;
   }
 
   @media (min-width: 768px) {
