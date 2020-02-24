@@ -2,6 +2,7 @@
   import { onMount } from "svelte";
   import { fly } from "svelte/transition";
   import { goto } from "@sapper/app";
+  import { items, LastScrollY } from "../store/homePost";
 
   onMount(() => {
     console.log(window.location);
@@ -51,8 +52,8 @@
   };
 
   const subMitEvent = async () => {
-    console.log(formData);
-    console.log(quillEditor.root.innerHTML);
+    // console.log(formData);
+    // console.log(quillEditor.root.innerHTML);
     isCardLoading = !isCardLoading;
 
     const today = new Date();
@@ -92,10 +93,14 @@
         .doc(cid)
         .set({ createdAt, modifiedAt, content });
       isCardOk = true;
-      console.log("isCardOk", isCardOk);
+      $items = [
+        { title, category, url, description, tags, createdAt, date },
+        ...$items
+      ];
+      $LastScrollY = 0;
+      // console.log("isCardOk", isCardOk);
     } catch (e) {
-      console.log("aaa");
-      console.log(e);
+      // console.log(e);
       isCardError = true;
     }
   };

@@ -1,5 +1,7 @@
 <script>
-  import { onMount } from "svelte";
+  import { onMount, beforeUpdate, afterUpdate } from "svelte";
+  import { goto } from "@sapper/app";
+  import { items, LastPost, LastScrollY } from "../store/homePost";
 
   import Header from "../components/Header.svelte";
   import TransitionWrapper from "../components/TransitionWrapper.svelte";
@@ -18,21 +20,19 @@
 
   let scrollY;
   let innerHeight;
-  let items = [];
   let scrollStart = true;
-  let LastPost;
+
   const handleScroll = e => {
     // console.log(scrollY);
     // console.log(innerHeight);
     // console.log(window.innerHeight);
     // console.log(document.body.scrollHeight);
-
     if (
       (document.body.scrollHeight - innerHeight) * 0.8 < scrollY &&
       scrollStart
     ) {
       scrollStart = false;
-      scorollPost(LastPost);
+      scorollPost($LastPost);
     }
   };
 
@@ -47,30 +47,46 @@
         .get();
       // console.log(res);
       const plusItems = res.docs.map(e => e.data());
-      items = [...items, ...plusItems];
-      LastPost = res.docs[res.docs.length - 1];
+      $items = [...$items, ...plusItems];
+      $LastPost = res.docs[res.docs.length - 1];
       scrollStart = true;
     } catch (e) {
       // console.log(e);
     }
   };
 
-  onMount(async () => {
-    try {
-      const res = await firebase
-        .firestore()
-        .collection("docs")
-        .orderBy("createdAt", "desc")
-        .limit(10)
-        .get();
-      // console.log(res);
-      items = res.docs.map(e => e.data());
-      LastPost = res.docs[res.docs.length - 1];
-      // console.log(items);
-    } catch (e) {
-      // console.log(e);
-    }
-  });
+  if ($items.length === 0) {
+    onMount(async () => {
+      try {
+        const res = await firebase
+          .firestore()
+          .collection("docs")
+          .orderBy("createdAt", "desc")
+          .limit(10)
+          .get();
+        // console.log(res);
+        $items = res.docs.map(e => e.data());
+        $LastPost = res.docs[res.docs.length - 1];
+        // console.log(items);
+      } catch (e) {
+        // console.log(e);
+      }
+    });
+  } else {
+    onMount(() => {
+      // console.log(scrollY);
+      setTimeout(() => {
+        window.scrollTo({ top: $LastScrollY, left: 0, behavior: "smooth" });
+        //  behavior 값에  auto, instant, smooth
+      }, 500);
+      // scrollY = $LastScrollY;
+    });
+  }
+
+  const linkEvent = i => {
+    $LastScrollY = scrollY;
+    goto(i);
+  };
 </script>
 
 <style>
@@ -100,9 +116,11 @@
     <Container>
       <Row>
         <Col xs="12">
-          {#each items as item}
+          {#each $items as item}
             <Card class="mb-4 shadow border-0 rounded-lg">
-              <a href={`post/${item.category}/${item.url}`}>
+              <a
+                href={`post/${item.category}/${item.url}`}
+                on:click|preventDefault={() => linkEvent(`post/${item.category}/${item.url}`)}>
                 <div class="card_title_box">
                   <h2>{item.title}</h2>
                 </div>
