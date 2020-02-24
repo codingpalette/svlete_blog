@@ -1,19 +1,34 @@
+<script context="module">
+  export function preload(page, session) {
+    const { path } = page;
+    return { path };
+  }
+</script>
+
 <script>
+  export let path;
   import { onMount } from "svelte";
+  import { goto } from "@sapper/app";
   import Header from "../../../components/Header.svelte";
   import TransitionWrapper from "../../../components/TransitionWrapper.svelte";
   export let segment;
 
   import Container from "sveltestrap/src/Container.svelte";
+  import Button from "sveltestrap/src/Button.svelte";
 
   import { firebase } from "@firebase/app";
 
   let viewContent = {};
   let isViewLoading = true;
 
+  const postLink = () => {
+    console.log(path);
+    const pathname = path.split("/");
+    goto(`post_write?id=${pathname[2]}_${pathname[3]}`);
+  };
+
   onMount(async () => {
-    // console.log(window.location);
-    const pathname = window.location.pathname.split("/");
+    const pathname = path.split("/");
     // console.log(pathname);
     const metaRead = await firebase
       .firestore()
@@ -65,9 +80,12 @@
     font-size: 0.9rem;
     margin-top: 0.5rem;
   }
+  .view_btn_container {
+    padding-top: 1rem;
+  }
 
   .view_container {
-    padding: 10px 0 60px 0;
+    padding: 1rem 0 60px 0;
   }
   .view_content {
     padding: 1rem;
@@ -79,6 +97,9 @@
     .view_top_container {
       margin-left: 250px;
       width: calc(100% - 250px);
+    }
+    .view_btn_container {
+      padding: 1rem 0 0 250px;
     }
     .view_container {
       padding: 1rem 0 1rem 250px;
@@ -99,6 +120,12 @@
       <h1>{viewContent.title}</h1>
       <span class="date_box">{viewContent.date}</span>
     </div>
+  </div>
+  <div class="view_btn_container">
+    <Container>
+      <Button color="primary" on:click={postLink}>수정</Button>
+      <Button color="danger">삭제</Button>
+    </Container>
   </div>
   <TransitionWrapper>
     <div class="view_container ql-snow">

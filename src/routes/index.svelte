@@ -55,7 +55,7 @@
     }
   };
 
-  if ($items.length === 0) {
+  if ($items.length < 2) {
     onMount(async () => {
       try {
         const res = await firebase

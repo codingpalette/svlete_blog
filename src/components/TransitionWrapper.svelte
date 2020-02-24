@@ -15,7 +15,7 @@
 </style>
 
 {#if show}
-  <div in:fly={{ y: 50, duration: 1000 }}>
+  <div in:fly={{ y: 50, duration: 1500 }}>
     <slot />
   </div>
 {/if}

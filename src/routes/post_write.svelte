@@ -1,15 +1,30 @@
+<script context="module">
+  // the (optional) preload function takes a
+  // `{ path, params, query }` object and turns it into
+  // the data we need to render the page
+  export function preload(page, session) {
+    // the `slug` parameter is available because this file
+    // is called [slug].svelte
+    const { path, query } = page;
+    return { path, query };
+    console.log(query);
+  }
+</script>
+
 <script>
+  export let query;
   import { onMount } from "svelte";
   import { fly } from "svelte/transition";
   import { goto } from "@sapper/app";
   import { items, LastScrollY } from "../store/homePost";
 
   onMount(() => {
-    console.log(window.location);
+    // console.log(window.location);
   });
 
   export let segment;
   import Header from "../components/Header.svelte";
+  import PostPopup from "../components/post/PostPopup.svelte";
 
   import Container from "sveltestrap/src/Container.svelte";
   import Row from "sveltestrap/src/Row.svelte";
@@ -17,30 +32,29 @@
   import FormGroup from "sveltestrap/src/FormGroup.svelte";
   import Input from "sveltestrap/src/Input.svelte";
   import Label from "sveltestrap/src/Label.svelte";
-  import Card from "sveltestrap/src/Card.svelte";
-  import CardBody from "sveltestrap/src/CardBody.svelte";
-  import CardText from "sveltestrap/src/CardText.svelte";
-  import Button from "sveltestrap/src/Button.svelte";
-  import Spinner from "sveltestrap/src/Spinner.svelte";
 
   import { firebase } from "@firebase/app";
 
   let quillEditor;
+  let Mode;
 
   let modalOpen = false;
   let isCardLoading = false;
   let isCardOk = false;
   let isCardError = false;
+  // Object.entries(obj).length === 0 && obj.constructor === Object
+  console.log(query);
+  if (Object.entries(query).length === 0) {
+    Mode = "create";
+  } else {
+    Mode = "modify";
+  }
 
   const modalToggle = () => {
     modalOpen = !modalOpen;
     isCardLoading = false;
     isCardOk = false;
     isCardError = false;
-  };
-
-  const postOklink = () => {
-    goto("/");
   };
 
   let formData = {
@@ -69,7 +83,6 @@
     // console.log(formData);
     // console.log(quillEditor.root.innerHTML);
     isCardLoading = !isCardLoading;
-
     const today = new Date();
 
     let dd = today.getDate();
@@ -118,6 +131,27 @@
       isCardError = true;
     }
   };
+
+  if (Mode === "modify") {
+    onMount(async () => {
+      const pathname = query.id;
+      const metaRead = await firebase
+        .firestore()
+        .collection("docs")
+        .doc(pathname)
+        .get();
+
+      const docRead = await firebase
+        .firestore()
+        .collection("docs")
+        .doc(`${pathname}/content/last`)
+        .get();
+      formData = metaRead.data();
+      console.log(metaRead.data());
+      console.log(docRead.data());
+      quillEditor.root.innerHTML = docRead.data().content;
+    });
+  }
 
   onMount(async () => {
     // import("quill/dist/quill.snow.css");
@@ -177,6 +211,7 @@
 
   .write_main_container .form_box {
     background-color: #fff;
+    margin-bottom: 1rem;
   }
 
   :global(.write_main_container .label) {
@@ -202,61 +237,6 @@
   .form_category:focus {
     outline: none;
   }
-
-  .modal_container {
-    position: fixed;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    z-index: 1000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .modal_back {
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.7);
-    z-index: 100;
-  }
-
-  .modal_content {
-    position: relative;
-    margin: auto;
-    z-index: 200;
-    padding: 1rem;
-    max-width: 350px;
-    width: 100%;
-  }
-
-  .modal_content .card_title_box {
-    padding: 1.25rem;
-    border-bottom: 1px solid #edf1f7;
-  }
-
-  .modal_content .card_title_box strong {
-    font-size: 1.2rem;
-    font-weight: bold;
-    display: block;
-  }
-
-  .modal_content .card_footer_box {
-    padding: 1.25rem;
-    border-top: 1px solid #edf1f7;
-    display: flex;
-    justify-content: center;
-  }
-
-  .card_loading_text {
-    margin-top: 1rem;
-    font-size: 0.8rem;
-  }
-
   .tag_btn {
     padding: 10px 15px;
     background-color: #edf2f7;
@@ -278,10 +258,6 @@
     align-items: center;
     justify-content: center;
     flex-direction: column;
-  }
-
-  :global(.modal_content .card_footer_box button) {
-    margin: 0 5px;
   }
 
   :global(.ql-editor) {
@@ -318,7 +294,9 @@
       <a href="/" class="btn">
         <i class="fas fa-times fa-lg" />
       </a>
-      <h1>포스트 작성</h1>
+      <h1>
+        {#if Mode === 'create'}포스트 작성{:else}포스트 수정{/if}
+      </h1>
       <button class="btn" on:click={modalToggle}>
         <i class="fas fa-check fa-lg" />
       </button>
@@ -396,58 +374,11 @@
   </Container>
 </div>
 
-{#if modalOpen}
-  <div class="modal_container">
-    <div
-      class="modal_content"
-      in:fly={{ y: -50, duration: 1000 }}
-      out:fly={{ y: 50, duration: 700 }}>
-      <Card class="shadow border-0 rounded-lg">
-        {#if !isCardLoading}
-          <div class="card_title_box">
-            <strong>포스트 작성</strong>
-          </div>
-          <CardBody class="text-center">
-            <CardText>포스트를 작성 하시겠습니까?</CardText>
-          </CardBody>
-          <div class="card_footer_box">
-            <Button color="danger" on:click={modalToggle}>취소</Button>
-            <Button color="primary" on:click={submitEvent}>확인</Button>
-          </div>
-        {:else if !isCardOk && !isCardError}
-          <CardBody class="text-center card_loading_box">
-            <CardText>
-              <Spinner color="primary" />
-            </CardText>
-            <p class="card_loading_text">포스트 작성중...</p>
-          </CardBody>
-        {:else if isCardOk && !isCardError}
-          <div class="card_title_box">
-            <strong>포스트 작성</strong>
-          </div>
-          <CardBody class="text-center">
-            <CardText class="text-success">포스트작성을 완료했습니다.</CardText>
-          </CardBody>
-          <div class="card_footer_box">
-            <Button color="primary" on:click={postOklink}>확인</Button>
-          </div>
-        {:else if !isCardOk && isCardError}
-          <div class="card_title_box">
-            <strong>포스트 작성</strong>
-          </div>
-          <CardBody class="text-center">
-            <CardText class="text-danger">
-              포스트가 등록되지 않았습니다.
-            </CardText>
-            <CardText class="text-danger">다시 시도해주세요.</CardText>
-          </CardBody>
-          <div class="card_footer_box">
-            <Button color="danger" on:click={modalToggle}>확인</Button>
-          </div>
-        {/if}
-      </Card>
-
-    </div>
-    <div class="modal_back" />
-  </div>
-{/if}
+<PostPopup
+  {modalOpen}
+  {isCardLoading}
+  {isCardOk}
+  {isCardError}
+  {submitEvent}
+  {modalToggle}
+  {Mode} />
