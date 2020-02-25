@@ -62,7 +62,7 @@
     category: "html",
     url: "",
     description: "",
-    tags: ["aa", "bb", "cc"]
+    tags: []
   };
 
   let tag = "";
@@ -120,11 +120,14 @@
         .doc(cid)
         .set({ createdAt, modifiedAt, content });
       isCardOk = true;
-      $items = [
-        { title, category, url, description, tags, createdAt, date },
-        ...$items
-      ];
-      $LastScrollY = 0;
+      if (Mode === "create") {
+        $items = [
+          { title, category, url, description, tags, createdAt, date },
+          ...$items
+        ];
+        $LastScrollY = 0;
+      }
+
       // console.log("isCardOk", isCardOk);
     } catch (e) {
       // console.log(e);

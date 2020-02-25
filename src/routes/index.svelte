@@ -58,7 +58,7 @@
     }
   };
 
-  if ($items.length < 2) {
+  if ($items.length < 1) {
     onMount(async () => {
       try {
         const res = await firebase
@@ -73,9 +73,9 @@
         if (res.docs.length === 0) {
           notPage = true;
         }
-        console.log(res);
+        console.log($items);
       } catch (e) {
-        console.log(e);
+        // console.log(e);
       }
     });
   } else {
@@ -103,6 +103,18 @@
   .card_title_box h2 {
     font-size: 1.2rem;
     font-weight: bold;
+  }
+  .card_title_box .sub_box {
+    display: flex;
+    align-items: center;
+  }
+  .card_title_box .sub_content {
+    display: block;
+    padding-top: 1rem;
+    font-size: 0.8rem;
+  }
+  .card_title_box .sub_content + div {
+    margin-left: 1rem;
   }
   .notpage_container {
     text-align: center;
@@ -143,14 +155,21 @@
                   on:click|preventDefault={() => linkEvent(`post/${item.category}/${item.url}`)}>
                   <div class="card_title_box">
                     <h2>{item.title}</h2>
+                    <div class="sub_box">
+                      <div class="sub_content">
+                        <i class="far fa-calendar" />
+                        <span>작성일 {item.date}</span>
+                      </div>
+                      <div class="sub_content">
+                        <i class="fas fa-th-list" />
+                        <span>카테고리 {item.category}</span>
+                      </div>
+
+                    </div>
+
                   </div>
                   <CardBody>
-                    <CardText>
-                      Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                      Pariatur nesciunt harum incidunt expedita, quis a, esse et
-                      cum hic assumenda sequi dignissimos exercitationem
-                      inventore cumque libero beatae fuga suscipit labore!
-                    </CardText>
+                    <CardText class="text-dark">{item.description}</CardText>
                   </CardBody>
                 </a>
               </Card>
