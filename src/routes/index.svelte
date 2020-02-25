@@ -2,6 +2,8 @@
   import { onMount, beforeUpdate, afterUpdate } from "svelte";
   import { goto } from "@sapper/app";
   import { items, LastPost, LastScrollY } from "../store/homePost";
+  import { currentUser } from "../store/user";
+  import LoggedInBtn from "../components/LoggedInBtn.svelte";
 
   import Header from "../components/Header.svelte";
   import TransitionWrapper from "../components/TransitionWrapper.svelte";
@@ -21,6 +23,7 @@
   let scrollY;
   let innerHeight;
   let scrollStart = true;
+  let notPage = false;
 
   const handleScroll = e => {
     // console.log(scrollY);
@@ -67,9 +70,12 @@
         // console.log(res);
         $items = res.docs.map(e => e.data());
         $LastPost = res.docs[res.docs.length - 1];
-        // console.log(items);
+        if (res.docs.length === 0) {
+          notPage = true;
+        }
+        console.log(res);
       } catch (e) {
-        // console.log(e);
+        console.log(e);
       }
     });
   } else {
@@ -98,6 +104,19 @@
     font-size: 1.2rem;
     font-weight: bold;
   }
+  .notpage_container {
+    text-align: center;
+    position: relative;
+    min-height: calc(100vh - 120px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .notpage_container img {
+    width: 100%;
+    height: auto;
+    max-width: 800px;
+  }
 </style>
 
 <svelte:head>
@@ -115,28 +134,39 @@
   <div class="main_container">
     <Container>
       <Row>
-        <Col xs="12">
-          {#each $items as item}
-            <Card class="mb-4 shadow border-0 rounded-lg">
-              <a
-                href={`post/${item.category}/${item.url}`}
-                on:click|preventDefault={() => linkEvent(`post/${item.category}/${item.url}`)}>
-                <div class="card_title_box">
-                  <h2>{item.title}</h2>
-                </div>
-                <CardBody>
-                  <CardText>
-                    Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                    Pariatur nesciunt harum incidunt expedita, quis a, esse et
-                    cum hic assumenda sequi dignissimos exercitationem inventore
-                    cumque libero beatae fuga suscipit labore!
-                  </CardText>
-                </CardBody>
-              </a>
-            </Card>
-          {/each}
-        </Col>
+        {#if !notPage}
+          <Col xs="12">
+            {#each $items as item}
+              <Card class="mb-4 shadow border-0 rounded-lg">
+                <a
+                  href={`post/${item.category}/${item.url}`}
+                  on:click|preventDefault={() => linkEvent(`post/${item.category}/${item.url}`)}>
+                  <div class="card_title_box">
+                    <h2>{item.title}</h2>
+                  </div>
+                  <CardBody>
+                    <CardText>
+                      Lorem ipsum dolor sit amet consectetur, adipisicing elit.
+                      Pariatur nesciunt harum incidunt expedita, quis a, esse et
+                      cum hic assumenda sequi dignissimos exercitationem
+                      inventore cumque libero beatae fuga suscipit labore!
+                    </CardText>
+                  </CardBody>
+                </a>
+              </Card>
+            {/each}
+          </Col>
+        {:else}
+          <Col xs="12">
+            <div class="notpage_container">
+              <img src="image/notpage.svg" alt="notpage" />
+            </div>
+          </Col>
+        {/if}
       </Row>
     </Container>
   </div>
 </TransitionWrapper>
+{#if $currentUser}
+  <LoggedInBtn />
+{/if}

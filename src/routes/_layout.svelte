@@ -1,7 +1,5 @@
 <script>
   import UserObserver from "../components/UserObserver.svelte";
-  import { currentUser } from "../store/user";
-  import LoggedInBtn from "../components/LoggedInBtn.svelte";
 </script>
 
 <style>
@@ -24,6 +22,3 @@
 <main>
   <slot />
 </main>
-{#if $currentUser}
-  <LoggedInBtn />
-{/if}
