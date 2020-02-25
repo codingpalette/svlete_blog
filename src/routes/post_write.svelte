@@ -32,12 +32,29 @@
   import Input from "sveltestrap/src/Input.svelte";
   import Label from "sveltestrap/src/Label.svelte";
 
-  let quillEditor;
+  // import "codemirror/lib/codemirror.css";
+  // import "tui-editor/dist/tui-editor.css";
+  // import "tui-editor/dist/tui-editor-contents.css";
+  // import "highlight.js/styles/github.css";
+  // import Editor from "tui-editor";
+
+  let tuiEditor;
   let Mode;
   let modalOpen = false;
   let isCardLoading = false;
   let isCardOk = false;
   let isCardError = false;
+
+  let formData = {
+    title: "",
+    category: "html",
+    url: "",
+    description: "",
+    tags: [],
+    content: ""
+  };
+
+  let aaa = "";
 
   onMount(() => {
     const user = JSON.parse(localStorage.getItem("__palette_user__"));
@@ -59,14 +76,6 @@
     isCardLoading = false;
     isCardOk = false;
     isCardError = false;
-  };
-
-  let formData = {
-    title: "",
-    category: "html",
-    url: "",
-    description: "",
-    tags: []
   };
 
   let tag = "";
@@ -105,7 +114,10 @@
     const modifiedAt = today;
 
     const { title, category, url, description, tags } = formData;
-    const content = quillEditor.root.innerHTML;
+    // const content = tuiEditor.getHtml();
+    const content = tuiEditor.getMarkdown();
+    console.log(content);
+
     const id = category + "_" + url;
 
     try {
@@ -156,25 +168,18 @@
       formData = metaRead.data();
       // console.log(metaRead.data());
       // console.log(docRead.data());
-      quillEditor.root.innerHTML = docRead.data().content;
+      aaa = docRead.data().content;
+      console.log(aaa);
     });
   }
 
-  onMount(async () => {
-    // import("quill/dist/quill.snow.css");
-    const quillMoule = await import("quill/dist/quill.js");
-    const Quill = quillMoule.default;
-    quillEditor = new Quill("#editor-container", {
-      modules: {
-        toolbar: [
-          [{ header: "1" }, { header: "2" }],
-          ["bold", "italic", "underline", "strike"],
-          [{ list: "ordered" }, { list: "bullet" }],
-          ["blockquote", "code-block", "link", "image"]
-        ]
-      },
-      placeholder: "Compose an epic...",
-      theme: "snow" // or 'bubble'
+  onMount(() => {
+    tuiEditor = new tui.Editor({
+      el: document.querySelector("#editorSection"),
+      initialEditType: "wysiwyg", // 'markdown'
+      previewStyle: "vertical",
+      height: "500px",
+      initialValue: aaa
     });
   });
 </script>
@@ -269,11 +274,6 @@
 
   :global(.form-control.active) {
     pointer-events: none;
-  }
-
-  :global(.ql-editor) {
-    min-height: 250px;
-    color: #222;
   }
 
   @media (min-width: 768px) {
@@ -390,7 +390,7 @@
           </li>
         </ul>
       </FormGroup>
-      <div id="editor-container" />
+      <div id="editorSection" />
     </div>
   </Container>
 </div>

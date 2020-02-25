@@ -99,9 +99,7 @@
     box-sizing: border-box;
     background-color: #fff;
   }
-  :global(.modile_header) {
-    display: none;
-  }
+
   .loading_box {
     display: flex;
     align-items: center;
@@ -138,7 +136,7 @@
     </div>
     <div class="view_header_bottom">
       <h1>{viewContent.title}</h1>
-      <span class="date_box">{viewContent.date}</span>
+      <!-- <span class="date_box">{viewContent.date}</span> -->
     </div>
   </div>
   {#if user && user.level === 0}
