@@ -7,22 +7,28 @@
 
 <script>
   export let path;
-  import { onMount } from "svelte";
+  export let segment;
   import { goto } from "@sapper/app";
+  import { onMount } from "svelte";
+  import { firebase } from "@firebase/app";
+
   import Header from "../../../components/Header.svelte";
   import TransitionWrapper from "../../../components/TransitionWrapper.svelte";
-  export let segment;
 
   import Container from "sveltestrap/src/Container.svelte";
+  import Spinner from "sveltestrap/src/Spinner.svelte";
   import Button from "sveltestrap/src/Button.svelte";
-
-  import { firebase } from "@firebase/app";
 
   let viewContent = {};
   let isViewLoading = true;
+  let user = null;
+
+  onMount(() => {
+    user = JSON.parse(localStorage.getItem("__palette_user__"));
+  });
 
   const postLink = () => {
-    console.log(path);
+    // console.log(path);
     const pathname = path.split("/");
     goto(`post_write?id=${pathname[2]}_${pathname[3]}`);
   };
@@ -63,7 +69,8 @@
   }
   .view_header_top a {
     display: flex;
-    height: inherit;
+    width: 50px;
+    height: 50px;
     align-items: center;
     color: #000;
   }
@@ -92,6 +99,15 @@
     box-sizing: border-box;
     background-color: #fff;
   }
+  :global(.modile_header) {
+    display: none;
+  }
+  .loading_box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+  }
 
   @media (min-width: 768px) {
     .view_top_container {
@@ -103,6 +119,10 @@
     }
     .view_container {
       padding: 1rem 0 1rem 250px;
+    }
+    .loading_box {
+      margin-left: 250px;
+      width: calc(100% - 250px);
     }
   }
 </style>
@@ -121,12 +141,14 @@
       <span class="date_box">{viewContent.date}</span>
     </div>
   </div>
-  <div class="view_btn_container">
-    <Container>
-      <Button color="primary" on:click={postLink}>수정</Button>
-      <Button color="danger">삭제</Button>
-    </Container>
-  </div>
+  {#if user && user.level === 0}
+    <div class="view_btn_container">
+      <Container>
+        <Button color="primary" on:click={postLink}>수정</Button>
+        <Button color="danger">삭제</Button>
+      </Container>
+    </div>
+  {/if}
   <TransitionWrapper>
     <div class="view_container ql-snow">
       <Container>
@@ -136,4 +158,8 @@
       </Container>
     </div>
   </TransitionWrapper>
+{:else}
+  <div class="loading_box">
+    <Spinner color="primary" />
+  </div>
 {/if}

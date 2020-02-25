@@ -1,12 +1,12 @@
 <script>
+  export let MyUrl;
   import { goto } from "@sapper/app";
-  import FormGroup from "sveltestrap/src/FormGroup.svelte";
-  import Input from "sveltestrap/src/Input.svelte";
-  import Button from "sveltestrap/src/Button.svelte";
-
   import { firebase } from "@firebase/app";
 
-  export let MyUrl;
+  // sveltestrap
+  import Input from "sveltestrap/src/Input.svelte";
+  import Button from "sveltestrap/src/Button.svelte";
+  import FormGroup from "sveltestrap/src/FormGroup.svelte";
 
   const authForm = {
     email: "",

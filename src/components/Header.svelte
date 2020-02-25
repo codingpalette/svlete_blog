@@ -1,11 +1,14 @@
 <script>
+  export let segment;
+
   import { onMount } from "svelte";
 
-  export let segment;
-  import Button from "sveltestrap/src/Button.svelte";
+  // sveltestrap
   import Container from "sveltestrap/src/Container.svelte";
+  import Button from "sveltestrap/src/Button.svelte";
   import Row from "sveltestrap/src/Row.svelte";
   import Col from "sveltestrap/src/Col.svelte";
+
   let innerWidth;
 
   onMount(() => {
@@ -213,12 +216,12 @@
             <span>About</span>
           </a>
         </li>
-        <li>
+        <!-- <li>
           <a class:selected={segment === 'login'} href="login">
             <i class="fas fa-address-card fa-lg" />
             <span>login</span>
           </a>
-        </li>
+        </li> -->
         <li>
           <a class:selected={segment === 'blog'} href="blog">
             <i class="fas fa-clone fa-lg" />

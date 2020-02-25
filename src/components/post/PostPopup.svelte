@@ -1,13 +1,4 @@
 <script>
-  import { fly } from "svelte/transition";
-  import { goto } from "@sapper/app";
-
-  import Card from "sveltestrap/src/Card.svelte";
-  import CardBody from "sveltestrap/src/CardBody.svelte";
-  import CardText from "sveltestrap/src/CardText.svelte";
-  import Button from "sveltestrap/src/Button.svelte";
-  import Spinner from "sveltestrap/src/Spinner.svelte";
-
   export let modalOpen;
   export let isCardLoading;
   export let isCardOk;
@@ -15,6 +6,16 @@
   export let submitEvent;
   export let modalToggle;
   export let Mode;
+
+  import { goto } from "@sapper/app";
+  import { fly } from "svelte/transition";
+
+  // sveltestrap
+  import Card from "sveltestrap/src/Card.svelte";
+  import Button from "sveltestrap/src/Button.svelte";
+  import Spinner from "sveltestrap/src/Spinner.svelte";
+  import CardBody from "sveltestrap/src/CardBody.svelte";
+  import CardText from "sveltestrap/src/CardText.svelte";
 
   // console.log(Mode);
 

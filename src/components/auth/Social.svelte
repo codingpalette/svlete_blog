@@ -1,8 +1,9 @@
 <script>
   import { goto } from "@sapper/app";
-  import { Button } from "sveltestrap";
   import { firebase } from "@firebase/app";
 
+  // sveltestrap
+  import { Button } from "sveltestrap";
   const googleLogin = async () => {
     try {
       const provider = new firebase.auth.GoogleAuthProvider();

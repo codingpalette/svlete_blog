@@ -54,8 +54,8 @@
         <a href="/">codingpalette</a>
       </h2>
       <FormBox {MyUrl} />
-      <LinkBox {Link} />
-      <Social />
+      <!-- <LinkBox {Link} /> -->
+      <!-- <Social /> -->
     </div>
   </div>
 {/if}

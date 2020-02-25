@@ -18,7 +18,6 @@
 </style>
 
 <UserObserver />
-
 <main>
   <slot />
 </main>

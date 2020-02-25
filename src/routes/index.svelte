@@ -1,15 +1,17 @@
 <script>
-  import { onMount, beforeUpdate, afterUpdate } from "svelte";
+  export let segment;
+
   import { goto } from "@sapper/app";
+  import { onMount, beforeUpdate, afterUpdate } from "svelte";
+  import { firebase } from "@firebase/app";
   import { items, LastPost, LastScrollY } from "../store/homePost";
   import { currentUser } from "../store/user";
-  import LoggedInBtn from "../components/LoggedInBtn.svelte";
 
   import Header from "../components/Header.svelte";
   import TransitionWrapper from "../components/TransitionWrapper.svelte";
+  import LoggedInBtn from "../components/LoggedInBtn.svelte";
 
-  export let segment;
-
+  // sveltestrap
   import Button from "sveltestrap/src/Button.svelte";
   import Container from "sveltestrap/src/Container.svelte";
   import Row from "sveltestrap/src/Row.svelte";
@@ -17,8 +19,6 @@
   import Card from "sveltestrap/src/Card.svelte";
   import CardBody from "sveltestrap/src/CardBody.svelte";
   import CardText from "sveltestrap/src/CardText.svelte";
-
-  import { firebase } from "@firebase/app";
 
   let scrollY;
   let innerHeight;
@@ -73,7 +73,7 @@
         if (res.docs.length === 0) {
           notPage = true;
         }
-        console.log($items);
+        // console.log($items);
       } catch (e) {
         // console.log(e);
       }
@@ -186,6 +186,7 @@
     </Container>
   </div>
 </TransitionWrapper>
+
 {#if $currentUser}
   <LoggedInBtn />
 {/if}

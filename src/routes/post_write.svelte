@@ -7,22 +7,21 @@
     // is called [slug].svelte
     const { path, query } = page;
     return { path, query };
-    console.log(query);
+    // console.log(query);
   }
 </script>
 
 <script>
   export let query;
+  export let segment;
+
+  import { goto } from "@sapper/app";
   import { onMount } from "svelte";
   import { fly } from "svelte/transition";
-  import { goto } from "@sapper/app";
+  import { firebase } from "@firebase/app";
   import { items, LastScrollY } from "../store/homePost";
+  import { currentUser } from "../store/user";
 
-  onMount(() => {
-    // console.log(window.location);
-  });
-
-  export let segment;
   import Header from "../components/Header.svelte";
   import PostPopup from "../components/post/PostPopup.svelte";
 
@@ -33,17 +32,22 @@
   import Input from "sveltestrap/src/Input.svelte";
   import Label from "sveltestrap/src/Label.svelte";
 
-  import { firebase } from "@firebase/app";
-
   let quillEditor;
   let Mode;
-
   let modalOpen = false;
   let isCardLoading = false;
   let isCardOk = false;
   let isCardError = false;
+
+  onMount(() => {
+    const user = JSON.parse(localStorage.getItem("__palette_user__"));
+    if (user.level !== 0) {
+      goto("/");
+    }
+  });
+
   // Object.entries(obj).length === 0 && obj.constructor === Object
-  console.log(query);
+  // console.log(query);
   if (Object.entries(query).length === 0) {
     Mode = "create";
   } else {
@@ -150,8 +154,8 @@
         .doc(`${pathname}/content/last`)
         .get();
       formData = metaRead.data();
-      console.log(metaRead.data());
-      console.log(docRead.data());
+      // console.log(metaRead.data());
+      // console.log(docRead.data());
       quillEditor.root.innerHTML = docRead.data().content;
     });
   }
@@ -263,6 +267,10 @@
     flex-direction: column;
   }
 
+  :global(.form-control.active) {
+    pointer-events: none;
+  }
+
   :global(.ql-editor) {
     min-height: 250px;
     color: #222;
@@ -334,12 +342,22 @@
       </FormGroup>
       <FormGroup>
         <Label for="url" class="label">URL*</Label>
-        <Input
-          type="text"
-          name="url"
-          id="url"
-          bind:value={formData.url}
-          placeholder="url을 입력해주세요." />
+        {#if Mode === 'create'}
+          <Input
+            type="text"
+            name="url"
+            id="url"
+            bind:value={formData.url}
+            placeholder="url을 입력해주세요." />
+        {:else}
+          <Input
+            class="active"
+            type="text"
+            name="url"
+            id="url"
+            bind:value={formData.url}
+            placeholder="url을 입력해주세요." />
+        {/if}
       </FormGroup>
       <FormGroup>
         <Label for="description" class="label">포스트 소개*</Label>

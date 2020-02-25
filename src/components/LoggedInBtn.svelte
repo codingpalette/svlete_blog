@@ -1,18 +1,32 @@
 <script>
   import { goto } from "@sapper/app";
+  import { onMount } from "svelte";
+  import { fly } from "svelte/transition";
   import { firebase } from "@firebase/app";
   import { currentUser } from "../store/user";
-  import { fly } from "svelte/transition";
 
   let active = false;
-  async function logoutClick() {
+  let user = null;
+
+  onMount(() => {
+    user = JSON.parse(localStorage.getItem("__palette_user__"));
+  });
+
+  const logoutClick = async () => {
     try {
       await firebase.auth().signOut();
+      active = false;
       goto("/");
     } catch (e) {
       console.log(e);
     }
-  }
+  };
+
+  const postWriteClick = () => {
+    active = false;
+    goto("/post_write");
+  };
+  // console.log($currentUser);
 
   const btnClick = () => (active = !active);
 </script>
@@ -83,22 +97,24 @@
 <div class="logged_in_btn_container">
   {#if active}
     <ul in:fly={{ y: 10, duration: 500 }} out:fly={{ y: 10, duration: 500 }}>
-      <li>
-        <a href="/">
-          <span>관리자</span>
-          <button class="shadow-sm">
-            <i class="fas fa-user-cog fa-lg" />
-          </button>
-        </a>
-      </li>
-      <li>
-        <a href="/post_write">
-          <span>포스트 작성</span>
-          <button class="shadow-sm">
-            <i class="fas fa-clone fa-lg" />
-          </button>
-        </a>
-      </li>
+      {#if user.level === 0}
+        <li>
+          <a href="/">
+            <span>관리자</span>
+            <button class="shadow-sm">
+              <i class="fas fa-user-cog fa-lg" />
+            </button>
+          </a>
+        </li>
+        <li>
+          <a href="/post_write" on:click|preventDefault={postWriteClick}>
+            <span>포스트 작성</span>
+            <button class="shadow-sm">
+              <i class="fas fa-clone fa-lg" />
+            </button>
+          </a>
+        </li>
+      {/if}
       <li>
         <a href="/" on:click|preventDefault={logoutClick}>
           <span>로그아웃</span>

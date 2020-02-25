@@ -10,9 +10,6 @@ service cloud.firestore {
     //
     // Make sure to write security rules for your app before that time, or else
     // your app will lose access to your Firestore database
-    match /{document=**} {
-      allow read, write: if true;
-    }
     match /docs/{document=**} {
     	allow read : if true;
       allow write : if request.auth.uid == 'Y2g138uYkfQeoHSrdOuE15DQsmY2'
