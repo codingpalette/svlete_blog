@@ -22,8 +22,10 @@
 
   let scrollY;
   let innerHeight;
+  let innerWidth;
   let scrollStart = true;
   let notPage = false;
+  let getNum = 20;
 
   const handleScroll = e => {
     // console.log(scrollY);
@@ -46,7 +48,7 @@
         .collection("docs")
         .orderBy("createdAt", "desc")
         .startAfter(data)
-        .limit(10)
+        .limit(getNum)
         .get();
       // console.log(res);
       const plusItems = res.docs.map(e => e.data());
@@ -61,11 +63,14 @@
   if ($items.length < 1) {
     onMount(async () => {
       try {
+        if (innerWidth >= 2500) {
+          getNum = 30;
+        }
         const res = await firebase
           .firestore()
           .collection("docs")
           .orderBy("createdAt", "desc")
-          .limit(10)
+          .limit(getNum)
           .get();
         // console.log(res);
         $items = res.docs.map(e => e.data());
@@ -84,7 +89,7 @@
       setTimeout(() => {
         window.scrollTo({ top: $LastScrollY, left: 0, behavior: "smooth" });
         //  behavior 값에  auto, instant, smooth
-      }, 500);
+      }, 300);
       // scrollY = $LastScrollY;
     });
   }
@@ -128,11 +133,16 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-direction: column;
   }
   .notpage_container img {
     width: 100%;
     height: auto;
-    max-width: 800px;
+    max-width: 400px;
+  }
+  .notpage_container strong {
+    font-size: 1.5rem;
+    margin-top: 0.5rem;
   }
   :global(.main_card_box) {
     transition: 0.2s;
@@ -175,8 +185,9 @@
 
 <svelte:window
   bind:scrollY
+  bind:innerWidth
   bind:innerHeight
-  on:scroll={handleScroll(scrollY, innerHeight)} />
+  on:scroll={handleScroll(scrollY, innerWidth, innerHeight)} />
 
 <Header {segment} />
 
@@ -216,6 +227,7 @@
       <Col xs="12">
         <div class="notpage_container">
           <img src="image/notpage.svg" alt="notpage" />
+          <strong>포스트가 없습니다.</strong>
         </div>
       </Col>
     {/if}

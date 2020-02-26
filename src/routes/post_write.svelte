@@ -32,12 +32,6 @@
   import Input from "sveltestrap/src/Input.svelte";
   import Label from "sveltestrap/src/Label.svelte";
 
-  // import "codemirror/lib/codemirror.css";
-  // import "tui-editor/dist/tui-editor.css";
-  // import "tui-editor/dist/tui-editor-contents.css";
-  // import "highlight.js/styles/github.css";
-  // import Editor from "tui-editor";
-
   let tuiEditor;
   let Mode;
   let modalOpen = false;
@@ -95,7 +89,6 @@
     // console.log(quillEditor.root.innerHTML);
     isCardLoading = !isCardLoading;
     const today = new Date();
-
     let dd = today.getDate();
     let mm = today.getMonth() + 1; //January is 0!
     const yyyy = today.getFullYear();
@@ -107,14 +100,19 @@
     if (mm < 10) {
       mm = "0" + mm;
     }
-    const date = yyyy + "-" + mm + "-" + dd;
-    const createdAt = today;
+
+    let date, createdAt;
+    if (Mode === "create") {
+      date = yyyy + "-" + mm + "-" + dd;
+      createdAt = today;
+    } else {
+      date = formData.date;
+      createdAt = formData.createdAt;
+    }
+
     const modifiedAt = today;
-
     const { title, category, url, description, tags } = formData;
-    // const content = tuiEditor.getHtml();
     const content = tuiEditor.getMarkdown();
-
     const id = category + "_" + url;
 
     try {
@@ -123,7 +121,7 @@
         .firestore()
         .collection("docs")
         .doc(id)
-        .set({ title, category, url, description, tags, createdAt, date });
+        .set({ title, category, url, description, tags, createdAt, date, id });
 
       const cid = id + "/content/last";
 
@@ -133,12 +131,26 @@
         .doc(cid)
         .set({ createdAt, modifiedAt, content });
       isCardOk = true;
+      // const aa = $items.findIndex(i => i.id === id);
+      // console.log(aa);
+      // console.log($items);
       if (Mode === "create") {
         $items = [
-          { title, category, url, description, tags, createdAt, date },
+          { title, category, url, description, tags, createdAt, date, id },
           ...$items
         ];
         $LastScrollY = 0;
+      } else {
+        $items[$items.findIndex(i => i.id === id)] = {
+          title,
+          category,
+          url,
+          description,
+          tags,
+          createdAt,
+          date,
+          id
+        };
       }
 
       // console.log("isCardOk", isCardOk);
