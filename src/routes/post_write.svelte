@@ -54,8 +54,6 @@
     content: ""
   };
 
-  let aaa = "";
-
   onMount(() => {
     const user = JSON.parse(localStorage.getItem("__palette_user__"));
     if (user.level !== 0) {
@@ -116,7 +114,6 @@
     const { title, category, url, description, tags } = formData;
     // const content = tuiEditor.getHtml();
     const content = tuiEditor.getMarkdown();
-    console.log(content);
 
     const id = category + "_" + url;
 
@@ -168,8 +165,14 @@
       formData = metaRead.data();
       // console.log(metaRead.data());
       // console.log(docRead.data());
-      aaa = docRead.data().content;
-      console.log(aaa);
+      formData.content = docRead.data().content;
+      tuiEditor = new tui.Editor({
+        el: document.querySelector("#editorSection"),
+        initialEditType: "wysiwyg", // 'markdown'
+        previewStyle: "vertical",
+        height: "500px",
+        initialValue: formData.content
+      });
     });
   }
 
@@ -179,7 +182,7 @@
       initialEditType: "wysiwyg", // 'markdown'
       previewStyle: "vertical",
       height: "500px",
-      initialValue: aaa
+      initialValue: formData.content
     });
   });
 </script>
@@ -262,18 +265,6 @@
   }
   .tag_btn:hover {
     opacity: 0.8;
-  }
-
-  :global(.card_loading_box) {
-    min-height: 186.5px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-  }
-
-  :global(.form-control.active) {
-    pointer-events: none;
   }
 
   @media (min-width: 768px) {

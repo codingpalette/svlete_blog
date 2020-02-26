@@ -96,6 +96,11 @@
 </script>
 
 <style>
+  .home_container {
+    display: flex;
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
   .card_title_box {
     padding: 1.25rem;
     border-bottom: 1px solid #edf1f7;
@@ -129,6 +134,39 @@
     height: auto;
     max-width: 800px;
   }
+  :global(.main_card_box) {
+    transition: 0.2s;
+  }
+  :global(.main_card_box:hover) {
+    transform: translateY(-5px);
+  }
+  :global(.main_card_box .main_card) {
+    height: 300px;
+  }
+  @media (min-width: 1500px) {
+    :global(.main_card_box) {
+      flex: 0 0 25%;
+      max-width: 25%;
+    }
+  }
+  @media (min-width: 2000px) {
+    :global(.main_card_box) {
+      flex: 0 0 20%;
+      max-width: 20%;
+    }
+  }
+  @media (min-width: 2500px) {
+    :global(.main_card_box) {
+      flex: 0 0 16.66%;
+      max-width: 16.66%;
+    }
+  }
+  @media (min-width: 3000px) {
+    :global(.main_card_box) {
+      flex: 0 0 14.28%;
+      max-width: 14.28%;
+    }
+  }
 </style>
 
 <svelte:head>
@@ -143,47 +181,44 @@
 <Header {segment} />
 
 <TransitionWrapper>
-  <div class="main_container">
-    <Container>
-      <Row>
-        {#if !notPage}
-          <Col xs="12">
-            {#each $items as item}
-              <Card class="mb-4 shadow border-0 rounded-lg">
-                <a
-                  href={`post/${item.category}/${item.url}`}
-                  on:click|preventDefault={() => linkEvent(`post/${item.category}/${item.url}`)}>
-                  <div class="card_title_box">
-                    <h2>{item.title}</h2>
-                    <div class="sub_box">
-                      <div class="sub_content">
-                        <i class="far fa-calendar" />
-                        <span>작성일 {item.date}</span>
-                      </div>
-                      <div class="sub_content">
-                        <i class="fas fa-th-list" />
-                        <span>카테고리 {item.category}</span>
-                      </div>
-
-                    </div>
-
+  <div class="main_container home_container">
+    {#if !notPage}
+      {#each $items as item}
+        <Col sm="12" md="12" lg="6" xl="4" class="main_card_box">
+          <Card class="mb-4 shadow border-0 rounded-lg ">
+            <a
+              href={`post/${item.category}/${item.url}`}
+              on:click|preventDefault={() => linkEvent(`post/${item.category}/${item.url}`)}
+              class="main_card">
+              <div class="card_title_box">
+                <h2>{item.title}</h2>
+                <div class="sub_box">
+                  <div class="sub_content">
+                    <i class="far fa-calendar" />
+                    <span>작성일 {item.date}</span>
                   </div>
-                  <CardBody>
-                    <CardText class="text-dark">{item.description}</CardText>
-                  </CardBody>
-                </a>
-              </Card>
-            {/each}
-          </Col>
-        {:else}
-          <Col xs="12">
-            <div class="notpage_container">
-              <img src="image/notpage.svg" alt="notpage" />
-            </div>
-          </Col>
-        {/if}
-      </Row>
-    </Container>
+                  <div class="sub_content">
+                    <i class="fas fa-th-list" />
+                    <span>카테고리 {item.category}</span>
+                  </div>
+
+                </div>
+
+              </div>
+              <CardBody>
+                <CardText class="text-dark">{item.description}</CardText>
+              </CardBody>
+            </a>
+          </Card>
+        </Col>
+      {/each}
+    {:else}
+      <Col xs="12">
+        <div class="notpage_container">
+          <img src="image/notpage.svg" alt="notpage" />
+        </div>
+      </Col>
+    {/if}
   </div>
 </TransitionWrapper>
 

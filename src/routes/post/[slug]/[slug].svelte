@@ -22,6 +22,7 @@
   let viewContent = {};
   let isViewLoading = true;
   let user = null;
+  let tuiEditor;
 
   onMount(() => {
     user = JSON.parse(localStorage.getItem("__palette_user__"));
@@ -49,8 +50,16 @@
       .get();
 
     viewContent = metaRead.data();
-    viewContent.content = docRead.data().content.replace(/^\t{3}/gm, "");
+    // viewContent.content = docRead.data().content.replace(/^\t{3}/gm, "");
     isViewLoading = false;
+    setTimeout(() => {
+      tuiEditor = new tui.Editor.factory({
+        el: document.querySelector("#editorSection"),
+        viewer: true,
+        height: "500px",
+        initialValue: docRead.data().content
+      });
+    }, 0);
   });
 </script>
 
@@ -82,11 +91,11 @@
     font-weight: bold;
     word-break: break-all;
   }
-  .view_header_bottom .date_box {
+  /* .view_header_bottom .date_box {
     display: block;
     font-size: 0.9rem;
     margin-top: 0.5rem;
-  }
+  } */
   .view_btn_container {
     padding-top: 1rem;
   }
@@ -98,6 +107,8 @@
     padding: 1rem;
     box-sizing: border-box;
     background-color: #fff;
+    color: #333;
+    margin-bottom: 3rem;
   }
 
   .loading_box {
@@ -148,10 +159,13 @@
     </div>
   {/if}
   <TransitionWrapper>
-    <div class="view_container ql-snow">
+    <div class="view_container">
       <Container>
-        <div class="view_content ql-editor shadow rounded-lg">
-          {@html viewContent.content}
+        <div class="view_content shadow rounded-lg">
+
+          <div id="editorSection" />
+
+          <!-- {@html viewContent.content} -->
         </div>
       </Container>
     </div>
