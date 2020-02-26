@@ -89,7 +89,7 @@
       setTimeout(() => {
         window.scrollTo({ top: $LastScrollY, left: 0, behavior: "smooth" });
         //  behavior 값에  auto, instant, smooth
-      }, 300);
+      }, 500);
       // scrollY = $LastScrollY;
     });
   }

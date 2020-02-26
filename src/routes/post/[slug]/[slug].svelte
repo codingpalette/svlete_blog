@@ -11,8 +11,10 @@
   import { goto } from "@sapper/app";
   import { onMount } from "svelte";
   import { firebase } from "@firebase/app";
+  import { items } from "../../../store/homePost";
 
   import Header from "../../../components/Header.svelte";
+  import PostPopup from "../../../components/post/PostPopup.svelte";
   import TransitionWrapper from "../../../components/TransitionWrapper.svelte";
 
   import Container from "sveltestrap/src/Container.svelte";
@@ -24,6 +26,13 @@
   let user = null;
   let tuiEditor;
 
+  // 팝업관련 변수
+  let Mode = "delete";
+  let modalOpen = false;
+  let isCardLoading = false;
+  let isCardOk = false;
+  let isCardError = false;
+
   onMount(() => {
     user = JSON.parse(localStorage.getItem("__palette_user__"));
   });
@@ -34,19 +43,49 @@
     goto(`post_write?id=${pathname[2]}_${pathname[3]}`);
   };
 
+  const modalToggle = () => {
+    modalOpen = !modalOpen;
+    isCardLoading = false;
+    isCardOk = false;
+    isCardError = false;
+  };
+
+  const submitEvent = async () => {
+    const pathname = path.split("/");
+    isCardLoading = !isCardLoading;
+    try {
+      await firebase
+        .firestore()
+        .collection("docs")
+        .doc(`${pathname[2]}_${pathname[3]}`)
+        .delete();
+      await firebase
+        .firestore()
+        .collection("docs")
+        .doc(`${pathname[2]}_${pathname[3]}/content/last`)
+        .delete();
+      isCardOk = true;
+      $items.splice($items.findIndex(i => i.id === viewContent.id), 1);
+    } catch (e) {
+      console.log(e);
+      isCardError = true;
+    }
+  };
+
   onMount(async () => {
     const pathname = path.split("/");
     // console.log(pathname);
+    // console.log(decodeURI(`${pathname[2]}_${pathname[3]}`));
     const metaRead = await firebase
       .firestore()
       .collection("docs")
-      .doc(`${pathname[2]}_${pathname[3]}`)
+      .doc(decodeURI(`${pathname[2]}_${pathname[3]}`))
       .get();
 
     const docRead = await firebase
       .firestore()
       .collection("docs")
-      .doc(`${pathname[2]}_${pathname[3]}/content/last`)
+      .doc(decodeURI(`${pathname[2]}_${pathname[3]}/content/last`))
       .get();
 
     viewContent = metaRead.data();
@@ -154,7 +193,7 @@
     <div class="view_btn_container">
       <Container>
         <Button color="primary" on:click={postLink}>수정</Button>
-        <Button color="danger">삭제</Button>
+        <Button color="danger" on:click={modalToggle}>삭제</Button>
       </Container>
     </div>
   {/if}
@@ -175,3 +214,12 @@
     <Spinner color="primary" />
   </div>
 {/if}
+
+<PostPopup
+  {modalOpen}
+  {isCardLoading}
+  {isCardOk}
+  {isCardError}
+  {submitEvent}
+  {modalToggle}
+  {Mode} />

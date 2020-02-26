@@ -104,19 +104,27 @@
             <strong>
               {#if Mode === 'create'}
                 포스트 작성
-              {:else if Mode === 'modify'}포스트 수정{/if}
+              {:else if Mode === 'modify'}
+                포스트 수정
+              {:else if Mode === 'delete'}포스트 삭제{/if}
             </strong>
           </div>
           <CardBody class="text-center">
             <CardText>
               {#if Mode === 'create'}
                 포스트를 작성 하시겠습니까?
-              {:else if Mode === 'modify'}포스트를 수정 하시겠습니까?{/if}
+              {:else if Mode === 'modify'}
+                포스트를 수정 하시겠습니까?
+              {:else if Mode === 'delete'}포스트를 삭제 하시겠습니까?{/if}
             </CardText>
           </CardBody>
           <div class="card_footer_box">
-            <Button color="danger" on:click={modalToggle}>취소</Button>
-            <Button color="primary" on:click={submitEvent}>확인</Button>
+            <Button color="light" on:click={modalToggle}>취소</Button>
+            {#if Mode !== 'delete'}
+              <Button color="primary" on:click={submitEvent}>확인</Button>
+            {:else}
+              <Button color="danger" on:click={submitEvent}>삭제</Button>
+            {/if}
           </div>
         {:else if !isCardOk && !isCardError}
           <CardBody class="text-center card_loading_box">
@@ -126,7 +134,9 @@
             <p class="card_loading_text">
               {#if Mode === 'create'}
                 포스트 작성중...
-              {:else if Mode === 'modify'}포스트 수정중...{/if}
+              {:else if Mode === 'modify'}
+                포스트 수정중...
+              {:else if Mode === 'delete'}포스트 삭제중...{/if}
             </p>
           </CardBody>
         {:else if isCardOk && !isCardError}
@@ -134,14 +144,18 @@
             <strong>
               {#if Mode === 'create'}
                 포스트 작성
-              {:else if Mode === 'modify'}포스트 수정{/if}
+              {:else if Mode === 'modify'}
+                포스트 수정
+              {:else if Mode === 'delete'}포스트 삭제{/if}
             </strong>
           </div>
           <CardBody class="text-center">
             <CardText class="text-success">
               {#if Mode === 'create'}
                 포스트작성을 완료했습니다.
-              {:else if Mode === 'modify'}포스트수정을 완료했습니다.{/if}
+              {:else if Mode === 'modify'}
+                포스트수정을 완료했습니다.
+              {:else if Mode === 'delete'}포스트삭제를 완료했습니다.{/if}
             </CardText>
           </CardBody>
           <div class="card_footer_box">
@@ -152,14 +166,18 @@
             <strong>
               {#if Mode === 'create'}
                 포스트 작성
-              {:else if Mode === 'modify'}포스트 수정{/if}
+              {:else if Mode === 'modify'}
+                포스트 수정
+              {:else if Mode === 'delete'}포스트 삭제{/if}
             </strong>
           </div>
           <CardBody class="text-center">
             <CardText class="text-danger">
               {#if Mode === 'create'}
                 포스트가 등록되지 않았습니다.
-              {:else if Mode === 'modify'}포스트가 수정되지 않았습니다.{/if}
+              {:else if Mode === 'modify'}
+                포스트가 수정되지 않았습니다.
+              {:else if Mode === 'delete'}포스트가 삭제되지 않았습니다.{/if}
             </CardText>
             <CardText class="text-danger">다시 시도해주세요.</CardText>
           </CardBody>

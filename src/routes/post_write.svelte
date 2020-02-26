@@ -19,20 +19,22 @@
   import { onMount } from "svelte";
   import { fly } from "svelte/transition";
   import { firebase } from "@firebase/app";
-  import { items, LastScrollY } from "../store/homePost";
+  import { items, LastPost, LastScrollY } from "../store/homePost";
   import { currentUser } from "../store/user";
 
   import Header from "../components/Header.svelte";
   import PostPopup from "../components/post/PostPopup.svelte";
 
-  import Container from "sveltestrap/src/Container.svelte";
   import Row from "sveltestrap/src/Row.svelte";
   import Col from "sveltestrap/src/Col.svelte";
-  import FormGroup from "sveltestrap/src/FormGroup.svelte";
   import Input from "sveltestrap/src/Input.svelte";
   import Label from "sveltestrap/src/Label.svelte";
+  import Container from "sveltestrap/src/Container.svelte";
+  import FormGroup from "sveltestrap/src/FormGroup.svelte";
 
   let tuiEditor;
+
+  // 팝업관련 변수
   let Mode;
   let modalOpen = false;
   let isCardLoading = false;
@@ -134,6 +136,20 @@
       // const aa = $items.findIndex(i => i.id === id);
       // console.log(aa);
       // console.log($items);
+
+      if ($items.length < 1) {
+        const res = await firebase
+          .firestore()
+          .collection("docs")
+          .orderBy("createdAt", "desc")
+          .limit(30)
+          .get();
+        $items = res.docs.map(e => e.data());
+        $LastPost = res.docs[res.docs.length - 1];
+        $LastScrollY = 0;
+        return;
+      }
+
       if (Mode === "create") {
         $items = [
           { title, category, url, description, tags, createdAt, date, id },
