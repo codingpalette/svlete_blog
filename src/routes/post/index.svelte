@@ -1,12 +1,12 @@
 <script>
   import Header from "../../components/Header.svelte";
-  export let segment;
+  import Welcome from "../../components/Welcome.svelte";
 </script>
 
-<Header {segment} />
+<Header />
 
 <div class="main_container">
-  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nostrum magni
-  numquam expedita, quas eius iste porro neque aperiam. Quam ea rerum sed saepe
-  culpa tempora doloremque debitis fugiat dolorum minus.
+  <Welcome>
+    <h1 slot="title">포스트 페이지 준비중입니다.</h1>
+  </Welcome>
 </div>

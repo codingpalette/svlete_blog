@@ -13,7 +13,6 @@
 
 <script>
   export let query;
-  export let segment;
 
   import { goto } from "@sapper/app";
   import { onMount } from "svelte";
@@ -316,7 +315,7 @@
   }
 </style>
 
-<Header {segment} />
+<Header />
 
 <div class="write_top_container">
   <Container>

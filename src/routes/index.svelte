@@ -1,6 +1,4 @@
 <script>
-  export let segment;
-
   import { goto } from "@sapper/app";
   import { onMount, beforeUpdate, afterUpdate } from "svelte";
   import { firebase } from "@firebase/app";
@@ -189,7 +187,7 @@
   bind:innerHeight
   on:scroll={handleScroll(scrollY, innerWidth, innerHeight)} />
 
-<Header {segment} />
+<Header />
 
 <TransitionWrapper>
   <div class="main_container home_container">

@@ -1,5 +1,8 @@
 <script>
   import UserObserver from "../components/UserObserver.svelte";
+  export let segment;
+  import { isSegment } from "../store/segment";
+  $: $isSegment = segment;
 </script>
 
 <style>

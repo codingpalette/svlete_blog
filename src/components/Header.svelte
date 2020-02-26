@@ -1,6 +1,5 @@
 <script>
-  export let segment;
-
+  import { isSegment } from "../store/segment";
   import { onMount } from "svelte";
 
   // sveltestrap
@@ -50,10 +49,11 @@
     text-align: center;
   }
 
-  .modile_header .logo a {
-    color: #2a44ec;
-    font-weight: bold;
-    font-size: 1rem;
+  .modile_header .logo img {
+    display: block;
+    width: auto;
+    height: 100%;
+    max-height: 35px;
   }
 
   .modile_footer ul {
@@ -79,7 +79,7 @@
   }
 
   .modile_footer ul li a.selected {
-    color: #2a44ec;
+    color: #007bff;
   }
 
   .modile_footer ul li a i,
@@ -123,14 +123,15 @@
       justify-content: center;
     }
 
-    .desk_nav_box .logo_box a {
-      color: #2a44ec;
-      font-weight: bold;
-      font-size: 1rem;
+    .desk_nav_box .logo_box img {
+      display: block;
+      width: auto;
+      height: 100%;
+      max-height: 50px;
     }
 
     .desk_nav_box nav {
-      margin-top: 30px;
+      margin-top: 1.4rem;
     }
 
     .desk_nav_box nav li a {
@@ -144,7 +145,7 @@
     }
 
     .desk_nav_box nav li a.selected {
-      color: #2a44ec;
+      color: #007bff;
     }
     .desk_nav_box nav li a span {
       margin-left: 10px;
@@ -162,7 +163,9 @@
       <Row>
         <Col>
           <h1 class="logo">
-            <a class:selected={segment === undefined} href=".">Codingpalette</a>
+            <a href=".">
+              <img src="image/cp03.png" alt="logo" />
+            </a>
           </h1>
         </Col>
       </Row>
@@ -172,68 +175,70 @@
     <nav>
       <ul>
         <li>
-          <a class:selected={segment === undefined} href=".">
+          <a class:selected={$isSegment === undefined} href=".">
             <i class="fas fa-home fa-lg" />
             <span>Home</span>
           </a>
         </li>
         <li>
-          <a class:selected={segment === 'about'} href="about">
+          <a class:selected={$isSegment === 'about'} href="about">
             <i class="fas fa-address-card fa-lg" />
             <span>About</span>
           </a>
         </li>
         <li>
-          <a class:selected={segment === 'blog'} href="blog">
+          <a class:selected={$isSegment === 'post'} href="post">
             <i class="fas fa-clone fa-lg" />
             <span>Post</span>
           </a>
         </li>
-        <li>
-          <a class:selected={segment === 'blog'} href="blog">
+        <!-- <li>
+          <a class:selected={$isSegment === 'blog'} href="blog">
             <i class="fas fa-tag fa-lg" />
             <span>Tag</span>
           </a>
-        </li>
+        </li> -->
       </ul>
     </nav>
   </footer>
   <div class="desk_nav_box">
     <h1 class="logo_box">
-      <a class:selected={segment === undefined} href=".">Codingpalette</a>
+      <a class:selected={$isSegment === undefined} href=".">
+        <img src="image/cp03.png" alt="logo" />
+      </a>
     </h1>
     <nav>
       <ul>
         <li>
-          <a class:selected={segment === undefined} href=".">
+          <a class:selected={$isSegment === undefined} href=".">
             <i class="fas fa-home fa-lg" />
             <span>Home</span>
           </a>
         </li>
         <li>
-          <a class:selected={segment === 'about'} href="about">
+          <a class:selected={$isSegment === 'about'} href="about">
             <i class="fas fa-address-card fa-lg" />
             <span>About</span>
           </a>
         </li>
         <!-- <li>
-          <a class:selected={segment === 'login'} href="login">
+          <a class:selected={$isSegment === 'login'} href="login">
             <i class="fas fa-address-card fa-lg" />
             <span>login</span>
           </a>
         </li> -->
         <li>
-          <a class:selected={segment === 'blog'} href="blog">
+          <a class:selected={$isSegment === 'post'} href="post">
             <i class="fas fa-clone fa-lg" />
             <span>Post</span>
           </a>
         </li>
-        <li>
-          <a class:selected={segment === 'blog'} href="blog">
+        <!-- <li>
+          <a class:selected={$isSegment === 'blog'} href="blog">
             <i class="fas fa-tag fa-lg" />
             <span>Tag</span>
           </a>
-        </li>
+        </li> -->
       </ul>
     </nav>
   </div>

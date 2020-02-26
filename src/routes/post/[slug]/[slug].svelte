@@ -7,7 +7,6 @@
 
 <script>
   export let path;
-  export let segment;
   import { goto } from "@sapper/app";
   import { onMount } from "svelte";
   import { firebase } from "@firebase/app";
@@ -207,7 +206,7 @@
   <meta property="og:title" content={viewContent.title} />
 </svelte:head>
 
-<Header {segment} />
+<Header />
 
 {#if !isViewLoading}
   <div class="view_top_container">
