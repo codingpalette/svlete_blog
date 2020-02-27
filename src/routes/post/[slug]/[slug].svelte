@@ -104,25 +104,14 @@
 <style>
   .view_top_container {
     width: 100%;
-    position: sticky;
-    left: 0;
-    top: 0;
+
     background-color: #fff;
     z-index: 600;
-    padding: 0 15px;
+    padding: 50px 15px 0;
   }
-  .view_header_top {
-    height: 50px;
-  }
-  .view_header_top a {
-    display: flex;
-    width: 50px;
-    height: 50px;
-    align-items: center;
-    color: #000;
-  }
+
   .view_header_bottom {
-    padding-bottom: 1rem;
+    padding: 1rem 0;
   }
   .view_header_bottom h1 {
     font-size: 2rem;
@@ -210,11 +199,6 @@
 
 {#if !isViewLoading}
   <div class="view_top_container">
-    <div class="view_header_top">
-      <a href="/">
-        <i class="fas fa-arrow-left fa-lg" />
-      </a>
-    </div>
     <div class="view_header_bottom">
       <h1>{viewContent.title}</h1>
       <!-- <span class="date_box">{viewContent.date}</span> -->
