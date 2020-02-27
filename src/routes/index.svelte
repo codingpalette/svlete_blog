@@ -8,6 +8,7 @@
   import Header from "../components/Header.svelte";
   import TransitionWrapper from "../components/TransitionWrapper.svelte";
   import LoggedInBtn from "../components/LoggedInBtn.svelte";
+  import Welcome from "../components/Welcome.svelte";
 
   // sveltestrap
   import Button from "sveltestrap/src/Button.svelte";
@@ -124,24 +125,7 @@
   .card_title_box .sub_content + div {
     margin-left: 1rem;
   }
-  .notpage_container {
-    text-align: center;
-    position: relative;
-    min-height: calc(100vh - 120px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-  }
-  .notpage_container img {
-    width: 100%;
-    height: auto;
-    max-width: 400px;
-  }
-  .notpage_container strong {
-    font-size: 1.5rem;
-    margin-top: 0.5rem;
-  }
+
   :global(.main_card_box) {
     transition: 0.2s;
   }
@@ -151,6 +135,7 @@
   :global(.main_card_box .main_card) {
     height: 300px;
   }
+
   @media (min-width: 1500px) {
     :global(.main_card_box) {
       flex: 0 0 25%;
@@ -189,9 +174,9 @@
 
 <Header />
 
-<TransitionWrapper>
-  <div class="main_container home_container">
-    {#if !notPage}
+{#if !notPage}
+  <TransitionWrapper>
+    <div class="main_container home_container">
       {#each $items as item}
         <Col sm="12" md="12" lg="6" xl="4" class="main_card_box">
           <Card class="mb-4 shadow border-0 rounded-lg ">
@@ -210,9 +195,7 @@
                     <i class="fas fa-th-list" />
                     <span>카테고리 {item.category}</span>
                   </div>
-
                 </div>
-
               </div>
               <CardBody>
                 <CardText class="text-dark">{item.description}</CardText>
@@ -221,16 +204,15 @@
           </Card>
         </Col>
       {/each}
-    {:else}
-      <Col xs="12">
-        <div class="notpage_container">
-          <img src="image/notpage.svg" alt="notpage" />
-          <strong>포스트가 없습니다.</strong>
-        </div>
-      </Col>
-    {/if}
+    </div>
+  </TransitionWrapper>
+{:else}
+  <div class="main_container">
+    <Welcome>
+      <h1 slot="title">포스트 준비중입니다.</h1>
+    </Welcome>
   </div>
-</TransitionWrapper>
+{/if}
 
 {#if $currentUser}
   <LoggedInBtn />

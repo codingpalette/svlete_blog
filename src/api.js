@@ -23,5 +23,11 @@ export const test = {
 };
 
 export const user = {
-  Get: () => API.get('/admin/users')
+  Get: (offset, limit) =>
+    API.get('/admin/users', {
+      params: {
+        offset,
+        limit
+      }
+    })
 };

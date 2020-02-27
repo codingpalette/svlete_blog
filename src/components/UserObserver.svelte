@@ -8,10 +8,10 @@
       const token = await user.getIdToken();
       const { claims } = await user.getIdTokenResult();
       $currentUser = [token, claims];
-      console.log($currentUser);
+      // console.log($currentUser);
       if (!localStorage.getItem("__palette_user__")) {
         const token = $currentUser[0];
-        console.log(token);
+        // console.log(token);
         const { user_id, level } = $currentUser[1];
         localStorage.setItem(
           "__palette_user__",

@@ -99,7 +99,7 @@
     <ul in:fly={{ y: 10, duration: 500 }} out:fly={{ y: 10, duration: 500 }}>
       {#if user.level === 0}
         <li>
-          <a href="/">
+          <a href="/admin">
             <span>관리자</span>
             <button class="shadow-sm">
               <i class="fas fa-user-cog fa-lg" />
