@@ -41,19 +41,22 @@
     border-top: 1px solid #edf1f7;
   }
 
-  .modile_header .logo {
-    height: 50px;
+  .logo_box {
     display: flex;
     align-items: center;
     justify-content: center;
-    text-align: center;
+    height: 50px;
   }
 
-  .modile_header .logo img {
+  .logo_box a:hover {
+    opacity: 1;
+  }
+
+  .logo_box img {
     display: block;
     width: auto;
     height: 100%;
-    max-height: 35px;
+    max-height: 40px;
   }
 
   .modile_footer ul {
@@ -117,19 +120,6 @@
       box-sizing: border-box;
     }
 
-    .desk_nav_box .logo_box {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .desk_nav_box .logo_box img {
-      display: block;
-      width: auto;
-      height: 100%;
-      max-height: 50px;
-    }
-
     .desk_nav_box nav {
       margin-top: 1.4rem;
     }
@@ -162,7 +152,7 @@
     <Container>
       <Row>
         <Col>
-          <h1 class="logo">
+          <h1 class="logo_box">
             <a href=".">
               <img src="image/cp03.png" alt="logo" />
             </a>

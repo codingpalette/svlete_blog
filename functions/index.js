@@ -5,7 +5,7 @@ const admin = require('firebase-admin');
 // // https://firebase.google.com/docs/functions/write-firebase-functions
 //
 
-admin.initializeApp();
+admin.initializeApp({ credential: admin.credential.cert(require('./key.json')) });
 
 const db = admin.firestore();
 
@@ -17,7 +17,6 @@ exports.helloWorld = functions.https.onRequest((request, response) => {
 
 exports.test = functions.https.onRequest(require('./test'));
 exports.admin = functions.https.onRequest(require('./admin'));
-
 exports.createUser = functions.auth.user().onCreate(async user => {
   const { uid, email, displayName, emailVerified, photoURL, disabled } = user;
   const claims = { level: 2 };

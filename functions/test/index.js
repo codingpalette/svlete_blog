@@ -8,7 +8,7 @@ const app = require('express')();
 const cors = require('cors');
 app.use(cors());
 
-app.use(require('../middlewares/Token'));
+// app.use(require('../middlewares/Token'));
 
 app.post('/', async (req, res, next) => {
   try {

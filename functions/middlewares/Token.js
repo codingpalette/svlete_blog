@@ -2,7 +2,7 @@ const admin = require('firebase-admin');
 
 module.exports = (req, res, next) => {
   // console.log(JSON.stringify(req.headers));
-  console.log(JSON.stringify(req.headers));
+  // console.log(JSON.stringify(req.headers));
   admin
     .auth()
     .verifyIdToken(req.headers.authorization)
@@ -12,7 +12,8 @@ module.exports = (req, res, next) => {
     })
     .catch(function(e) {
       // Handle error
-      console.log(e.message);
+      // console.log(e.message);
+      console.error(e.message);
       res.status(401).send();
     });
 };
