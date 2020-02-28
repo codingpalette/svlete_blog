@@ -9,6 +9,7 @@
   import TransitionWrapper from "../components/TransitionWrapper.svelte";
   import LoggedInBtn from "../components/LoggedInBtn.svelte";
   import Welcome from "../components/Welcome.svelte";
+  import Skeleton from "../components/Skeleton.svelte";
 
   // sveltestrap
   import Button from "sveltestrap/src/Button.svelte";
@@ -25,6 +26,29 @@
   let scrollStart = true;
   let notPage = false;
   let getNum = 20;
+  let isLoading = true;
+  const Skeletons = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20
+  ];
 
   const handleScroll = e => {
     // console.log(scrollY);
@@ -59,39 +83,37 @@
     }
   };
 
-  if ($items.length < 1) {
-    onMount(async () => {
-      try {
-        if (innerWidth >= 2500) {
-          getNum = 30;
-        }
-        const res = await firebase
-          .firestore()
-          .collection("docs")
-          .orderBy("createdAt", "desc")
-          .limit(getNum)
-          .get();
-        // console.log(res);
+  onMount(async () => {
+    try {
+      if (innerWidth >= 2500) {
+        getNum = 30;
+      }
+      const res = await firebase
+        .firestore()
+        .collection("docs")
+        .orderBy("createdAt", "desc")
+        .limit(getNum)
+        .get();
+      // console.log(res);
+      isLoading = false;
+
+      if ($items.length < 1) {
         $items = res.docs.map(e => e.data());
         $LastPost = res.docs[res.docs.length - 1];
-        if (res.docs.length === 0) {
-          notPage = true;
-        }
-        // console.log($items);
-      } catch (e) {
-        // console.log(e);
+      } else {
+        setTimeout(() => {
+          window.scrollTo({ top: $LastScrollY, left: 0, behavior: "smooth" });
+          //  behavior 값에  auto, instant, smooth
+        }, 500);
       }
-    });
-  } else {
-    onMount(() => {
-      // console.log(scrollY);
-      setTimeout(() => {
-        window.scrollTo({ top: $LastScrollY, left: 0, behavior: "smooth" });
-        //  behavior 값에  auto, instant, smooth
-      }, 500);
-      // scrollY = $LastScrollY;
-    });
-  }
+      if (res.docs.length === 0) {
+        notPage = true;
+      }
+      // console.log($items);
+    } catch (e) {
+      // console.log(e);
+    }
+  });
 
   const linkEvent = i => {
     $LastScrollY = scrollY;
@@ -174,38 +196,43 @@
 
 <Header />
 
-{#if !notPage}
-  <TransitionWrapper>
-    <div class="main_container home_container">
-      {#each $items as item}
-        <Col sm="12" md="12" lg="6" xl="4" class="main_card_box">
-          <Card class="mb-4 shadow border-0 rounded-lg ">
-            <a
-              href={`post/${item.category}/${item.url}`}
-              on:click|preventDefault={() => linkEvent(`post/${item.category}/${item.url}`)}
-              class="main_card">
-              <div class="card_title_box">
-                <h2>{item.title}</h2>
-                <div class="sub_box">
-                  <div class="sub_content">
-                    <i class="far fa-calendar" />
-                    <span>작성일 {item.date}</span>
-                  </div>
-                  <div class="sub_content">
-                    <i class="fas fa-th-list" />
-                    <span>카테고리 {item.category}</span>
-                  </div>
+{#if isLoading}
+  <div class="main_container home_container">
+    {#each Skeletons as item}
+      <Skeleton />
+    {/each}
+  </div>
+{:else if !notPage}
+  <div class="main_container home_container">
+
+    {#each $items as item}
+      <Col sm="12" md="12" lg="6" xl="4" class="main_card_box">
+        <Card class="mb-4 shadow border-0 rounded-lg ">
+          <a
+            href={`post/${item.category}/${item.url}`}
+            on:click|preventDefault={() => linkEvent(`post/${item.category}/${item.url}`)}
+            class="main_card">
+            <div class="card_title_box">
+              <h2>{item.title}</h2>
+              <div class="sub_box">
+                <div class="sub_content">
+                  <i class="far fa-calendar" />
+                  <span>작성일 {item.date}</span>
+                </div>
+                <div class="sub_content">
+                  <i class="fas fa-th-list" />
+                  <span>카테고리 {item.category}</span>
                 </div>
               </div>
-              <CardBody>
-                <CardText class="text-dark">{item.description}</CardText>
-              </CardBody>
-            </a>
-          </Card>
-        </Col>
-      {/each}
-    </div>
-  </TransitionWrapper>
+            </div>
+            <CardBody>
+              <CardText class="text-dark">{item.description}</CardText>
+            </CardBody>
+          </a>
+        </Card>
+      </Col>
+    {/each}
+  </div>
 {:else}
   <div class="main_container">
     <Welcome>
@@ -213,7 +240,6 @@
     </Welcome>
   </div>
 {/if}
-
 {#if $currentUser}
   <LoggedInBtn />
 {/if}

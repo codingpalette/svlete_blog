@@ -170,7 +170,7 @@
 
       // console.log("isCardOk", isCardOk);
     } catch (e) {
-      // console.log(e);
+      console.log(e);
       isCardError = true;
     }
   };
