@@ -12,7 +12,7 @@ service cloud.firestore {
     // your app will lose access to your Firestore database
     match /docs/{document=**} {
     	allow read : if true;
-      allow write : if request.auth.uid == 'Y2g138uYkfQeoHSrdOuE15DQsmY2'
+      allow write : if request.auth.uid == '9oL0lr6Ip9M7MoyM0K851w7bSaw1'
     }
   }
 }
