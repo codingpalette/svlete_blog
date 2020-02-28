@@ -6,7 +6,7 @@
   import { currentUser } from "../store/user";
 
   let active = false;
-  let user = null;
+  let user = "";
 
   onMount(() => {
     user = JSON.parse(localStorage.getItem("__palette_user__"));
@@ -16,6 +16,7 @@
     try {
       await firebase.auth().signOut();
       active = false;
+      user = "";
       goto("/");
     } catch (e) {
       console.log(e);
@@ -97,7 +98,7 @@
 <div class="logged_in_btn_container">
   {#if active}
     <ul in:fly={{ y: 10, duration: 500 }} out:fly={{ y: 10, duration: 500 }}>
-      {#if user.level === 0}
+      {#if user && user.level === 0}
         <li>
           <a href="/admin">
             <span>관리자</span>
@@ -115,15 +116,25 @@
           </a>
         </li>
       {/if}
+
       <li>
-        <a href="/" on:click|preventDefault={logoutClick}>
-          <span>로그아웃</span>
-          <button class="shadow-sm">
-            <i class="fas fa-sign-in-alt fa-lg" />
-          </button>
-        </a>
-        <!-- <button on:click={logoutClick}>로그아웃</button> -->
+        {#if user}
+          <a href="/" on:click|preventDefault={logoutClick}>
+            <span>로그아웃</span>
+            <button class="shadow-sm">
+              <i class="fas fa-sign-in-alt fa-lg" />
+            </button>
+          </a>
+        {:else}
+          <a href="/login">
+            <span>로그인</span>
+            <button class="shadow-sm">
+              <i class="fas fa-sign-in-alt fa-lg" />
+            </button>
+          </a>
+        {/if}
       </li>
+
     </ul>
   {/if}
   <button class:active class="toggle_btn" on:click={btnClick}>

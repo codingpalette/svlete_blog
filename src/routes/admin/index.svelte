@@ -13,6 +13,7 @@
   let nowPageNum = 1;
   let prevActive = false;
   let nextActive = false;
+  let isLoading = false;
 
   const Paging = (totalCnt, dataSize, pageSize, pageNo) => {
     let html = [];
@@ -66,6 +67,7 @@
     // console.log(res);
     // console.log(offset);
     items = res.data.items;
+    isLoading = true;
     Paging(res.data.totalCount, limit, 5, nowPageNum);
   };
 
@@ -113,81 +115,83 @@
 
 <Header />
 
-<div class="main_container">
-  <!-- <button on:click={click}>api 테스트</button>
+{#if isLoading}
+  <div class="main_container">
+    <!-- <button on:click={click}>api 테스트</button>
   <button on:click={userClick}>유저 테스트</button> -->
-  <Container>
-    <div class="user_table_container shadow rounded-lg ">
-      <Table hover borderless>
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>이메일</th>
-            <th>이름</th>
-            <!-- <th>아이디</th> -->
-            <th>사진</th>
-          </tr>
-        </thead>
-        <tbody>
-          {#each items as { email, displayName, uid, photoURL }, i}
+    <Container>
+      <div class="user_table_container shadow rounded-lg ">
+        <Table hover borderless>
+          <thead>
             <tr>
-              <th scope="row">{i + 1}</th>
-              <td>{email}</td>
-              <td>{displayName}</td>
-              <!-- <td>{uid}</td> -->
-              <td>
-                <div class="img_box">
-
-                  {#if photoURL === null}
-                    <span />
-                  {:else}
-                    <img src={photoURL} alt="프로필 사진" />
-                  {/if}
-                </div>
-              </td>
+              <th>#</th>
+              <th>이메일</th>
+              <th>이름</th>
+              <!-- <th>아이디</th> -->
+              <th>사진</th>
             </tr>
-          {/each}
+          </thead>
+          <tbody>
+            {#each items as { email, displayName, uid, photoURL }, i}
+              <tr>
+                <th scope="row">{i + 1}</th>
+                <td>{email}</td>
+                <td>{displayName}</td>
+                <!-- <td>{uid}</td> -->
+                <td>
+                  <div class="img_box">
 
-        </tbody>
-      </Table>
-    </div>
-    <div class="Pagination_container">
-      <nav aria-label="Page navigation example">
-        <ul class="pagination">
-          <li class="page-item" class:disabled={prevActive}>
-            <a
-              class="page-link"
-              href="."
-              aria-label="Previous"
-              on:click|preventDefault={() => movePrev()}>
-              <span aria-hidden="true">
-                <i class="fas fa-chevron-left" />
-              </span>
-            </a>
-          </li>
-          {#each nowPageLists as nowPageList}
-            <li class="page-item">
+                    {#if photoURL === null}
+                      <span />
+                    {:else}
+                      <img src={photoURL} alt="프로필 사진" />
+                    {/if}
+                  </div>
+                </td>
+              </tr>
+            {/each}
+
+          </tbody>
+        </Table>
+      </div>
+      <div class="Pagination_container">
+        <nav aria-label="Page navigation example">
+          <ul class="pagination">
+            <li class="page-item" class:disabled={prevActive}>
               <a
                 class="page-link"
                 href="."
-                on:click|preventDefault={() => movePage(nowPageList)}>
-                {nowPageList}
+                aria-label="Previous"
+                on:click|preventDefault={() => movePrev()}>
+                <span aria-hidden="true">
+                  <i class="fas fa-chevron-left" />
+                </span>
               </a>
             </li>
-          {/each}
-          <li class="page-item" class:disabled={nextActive}>
-            <a
-              class="page-link"
-              href="."
-              aria-label="Next"
-              on:click|preventDefault={() => moveNext()}>
-              <span aria-hidden="true">
-                <i class="fas fa-chevron-right" />
-              </span>
-            </a>
-          </li>
-        </ul>
-      </nav>
-    </div>
-  </Container>
-</div>
+            {#each nowPageLists as nowPageList}
+              <li class="page-item">
+                <a
+                  class="page-link"
+                  href="."
+                  on:click|preventDefault={() => movePage(nowPageList)}>
+                  {nowPageList}
+                </a>
+              </li>
+            {/each}
+            <li class="page-item" class:disabled={nextActive}>
+              <a
+                class="page-link"
+                href="."
+                aria-label="Next"
+                on:click|preventDefault={() => moveNext()}>
+                <span aria-hidden="true">
+                  <i class="fas fa-chevron-right" />
+                </span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </Container>
+  </div>
+{/if}

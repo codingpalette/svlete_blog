@@ -240,6 +240,5 @@
     </Welcome>
   </div>
 {/if}
-{#if $currentUser}
-  <LoggedInBtn />
-{/if}
+
+<LoggedInBtn />
