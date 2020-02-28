@@ -5,56 +5,86 @@
 
   import Container from "sveltestrap/src/Container.svelte";
   import Table from "sveltestrap/src/Table.svelte";
-  import Pagination from "sveltestrap/src/Pagination.svelte";
-  import PaginationItem from "sveltestrap/src/PaginationItem.svelte";
-  import PaginationLink from "sveltestrap/src/PaginationLink.svelte";
 
   let items = [];
   let offset = 0;
   let limit = 3;
   let nowPageLists = [];
-  let stateNum = 5;
+  let nowPageNum = 1;
+  let prevActive = false;
+  let nextActive = false;
 
-  // const click = async () => {
-  //   try {
-  //     const { data } = await test.Get();
-  //     console.log(data);
-  //   } catch (e) {
-  //     console.log(e);
-  //   }
-  // };
+  const Paging = (totalCnt, dataSize, pageSize, pageNo) => {
+    let html = [];
+    if (totalCnt == 0) {
+      return "";
+    }
 
-  // const userClick = async () => {
-  //   try {
-  //     const res = await user.Get();
-  //     console.log(res);
-  //     items = res.data.items;
-  //   } catch (e) {
-  //     console.log(e.message);
-  //   }
-  // };
+    // 페이지 카운트
+    let pageCnt = totalCnt % dataSize;
+    if (pageCnt == 0) {
+      pageCnt = parseInt(totalCnt / dataSize);
+    } else {
+      pageCnt = parseInt(totalCnt / dataSize) + 1;
+    }
+
+    let pRCnt = parseInt(pageNo / pageSize);
+    if (pageNo % pageSize == 0) {
+      pRCnt = parseInt(pageNo / pageSize) - 1;
+    }
+
+    //이전 화살표
+    if (pageNo > pageSize) {
+      prevActive = false;
+    } else {
+      prevActive = true;
+    }
+
+    //다음 화살표
+    if (pageCnt > (pRCnt + 1) * pageSize) {
+      nextActive = false;
+    } else {
+      nextActive = true;
+    }
+
+    for (
+      let index = pRCnt * pageSize + 1;
+      index < (pRCnt + 1) * pageSize + 1;
+      index++
+    ) {
+      html.push(index);
+      if (index == pageCnt) {
+        break;
+      }
+    }
+    nowPageLists = html;
+  };
 
   const getList = async v => {
     offset = (v - 1) * limit;
     const res = await user.Get(offset, limit);
-    console.log(res);
+    // console.log(res);
+    // console.log(offset);
     items = res.data.items;
-    const listLength = Math.ceil(res.data.totalCount / limit);
-    let list = [];
-    for (let i = 1; listLength >= i; i += 1) {
-      list.push(i);
-    }
-    console.log(list);
-    nowPageLists = list;
+    Paging(res.data.totalCount, limit, 5, nowPageNum);
   };
 
   const movePage = i => {
     getList(i);
   };
 
+  const movePrev = () => {
+    nowPageNum -= 5;
+    getList(nowPageNum);
+  };
+
+  const moveNext = () => {
+    nowPageNum += 5;
+    getList(nowPageNum);
+  };
+
   onMount(() => {
     getList(1);
-    // console.log(nowPageLists);
   });
 </script>
 
@@ -122,25 +152,42 @@
       </Table>
     </div>
     <div class="Pagination_container">
-      <Pagination ariaLabel="Page navigation example">
-        <PaginationItem disabled>
-          <PaginationLink previous href="#" />
-        </PaginationItem>
-        {#each nowPageLists as nowPageList}
-          <PaginationItem>
+      <nav aria-label="Page navigation example">
+        <ul class="pagination">
+          <li class="page-item" class:disabled={prevActive}>
             <a
-              href="."
               class="page-link"
-              class:active={nowPageList === offset + 1}
-              on:click|preventDefault={() => movePage(nowPageList)}>
-              {nowPageList}
+              href="."
+              aria-label="Previous"
+              on:click|preventDefault={() => movePrev()}>
+              <span aria-hidden="true">
+                <i class="fas fa-chevron-left" />
+              </span>
             </a>
-          </PaginationItem>
-        {/each}
-        <PaginationItem>
-          <PaginationLink next href="#" />
-        </PaginationItem>
-      </Pagination>
+          </li>
+          {#each nowPageLists as nowPageList}
+            <li class="page-item">
+              <a
+                class="page-link"
+                href="."
+                on:click|preventDefault={() => movePage(nowPageList)}>
+                {nowPageList}
+              </a>
+            </li>
+          {/each}
+          <li class="page-item" class:disabled={nextActive}>
+            <a
+              class="page-link"
+              href="."
+              aria-label="Next"
+              on:click|preventDefault={() => moveNext()}>
+              <span aria-hidden="true">
+                <i class="fas fa-chevron-right" />
+              </span>
+            </a>
+          </li>
+        </ul>
+      </nav>
     </div>
   </Container>
 </div>
