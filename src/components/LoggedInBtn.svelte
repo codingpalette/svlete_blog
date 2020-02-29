@@ -97,7 +97,8 @@
 
 <div class="logged_in_btn_container">
   {#if active}
-    <ul in:fly={{ y: 10, duration: 500 }} out:fly={{ y: 10, duration: 500 }}>
+    <!-- <ul in:fly={{ y: 10, duration: 500 }} out:fly={{ y: 10, duration: 500 }}> -->
+    <ul>
       {#if user && user.level === 0}
         <li>
           <a href="/admin">

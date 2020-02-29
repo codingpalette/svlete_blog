@@ -194,6 +194,7 @@
   bind:innerHeight
   on:scroll={handleScroll(scrollY, innerWidth, innerHeight)} />
 
+<LoggedInBtn />
 <Header />
 
 {#if isLoading}
@@ -240,5 +241,3 @@
     </Welcome>
   </div>
 {/if}
-
-<LoggedInBtn />
