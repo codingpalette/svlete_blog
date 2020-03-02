@@ -3,7 +3,7 @@
   import { firebase } from "@firebase/app";
 
   // sveltestrap
-  import { Button } from "sveltestrap";
+  import Button from "sveltestrap/src/Button.svelte";
   const googleLogin = async () => {
     try {
       const provider = new firebase.auth.GoogleAuthProvider();

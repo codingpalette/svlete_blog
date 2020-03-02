@@ -1,6 +1,6 @@
 <script>
-  import UserObserver from "../components/UserObserver.svelte";
   export let segment;
+  import UserObserver from "../components/UserObserver.svelte";
   import { isSegment } from "../store/segment";
   $: $isSegment = segment;
 </script>

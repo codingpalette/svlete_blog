@@ -23,6 +23,10 @@
     }
   };
 
+  const loginClick = () => {
+    window.location.href = "/login";
+  };
+
   const postWriteClick = () => {
     active = false;
     goto("/post_write");
@@ -97,8 +101,8 @@
 
 <div class="logged_in_btn_container">
   {#if active}
-    <!-- <ul in:fly={{ y: 10, duration: 500 }} out:fly={{ y: 10, duration: 500 }}> -->
-    <ul>
+    <ul in:fly={{ y: 10, duration: 500 }} out:fly={{ y: 10, duration: 500 }}>
+      <!-- <ul > -->
       {#if user && user.level === 0}
         <li>
           <a href="/admin">
@@ -127,7 +131,7 @@
             </button>
           </a>
         {:else}
-          <a href="/login">
+          <a href="/login" on:click|preventDefault={loginClick}>
             <span>로그인</span>
             <button class="shadow-sm">
               <i class="fas fa-sign-in-alt fa-lg" />
