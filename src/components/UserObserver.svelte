@@ -8,7 +8,7 @@
       const token = await user.getIdToken();
       const { claims } = await user.getIdTokenResult();
       $currentUser = [token, claims];
-      // console.log($currentUser);
+      // console.log(user);
       // console.log(token);
       const { user_id, level } = $currentUser[1];
       localStorage.setItem(

@@ -94,7 +94,10 @@
 
 {#if modalOpen}
   <div class="modal_container">
-    <div class="modal_content" in:fly={{ y: -50, duration: 1000 }}>
+    <div
+      class="modal_content"
+      in:fly={{ y: -50, duration: 1000 }}
+      out:fly={{ y: 50, duration: 700 }}>
       <Card class="shadow border-0 rounded-lg">
         {#if !isCardLoading}
           <div class="card_title_box">

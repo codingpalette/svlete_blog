@@ -99,30 +99,31 @@
   }
 </style>
 
-<div class="logged_in_btn_container">
-  {#if active}
-    <ul in:fly={{ y: 10, duration: 500 }} out:fly={{ y: 10, duration: 500 }}>
-      <!-- <ul > -->
-      {#if user && user.level === 0}
-        <li>
-          <a href="/admin">
-            <span>관리자</span>
-            <button class="shadow-sm">
-              <i class="fas fa-user-cog fa-lg" />
-            </button>
-          </a>
-        </li>
-        <li>
-          <a href="/post_write" on:click|preventDefault={postWriteClick}>
-            <span>포스트 작성</span>
-            <button class="shadow-sm">
-              <i class="fas fa-clone fa-lg" />
-            </button>
-          </a>
-        </li>
-      {/if}
+{#if user}
+  <div class="logged_in_btn_container">
+    {#if active}
+      <ul in:fly={{ y: 10, duration: 500 }} out:fly={{ y: 10, duration: 500 }}>
+        <!-- <ul > -->
+        {#if user && user.level === 0}
+          <li>
+            <a href="/admin">
+              <span>관리자</span>
+              <button class="shadow-sm">
+                <i class="fas fa-user-cog fa-lg" />
+              </button>
+            </a>
+          </li>
+          <li>
+            <a href="/post_write" on:click|preventDefault={postWriteClick}>
+              <span>포스트 작성</span>
+              <button class="shadow-sm">
+                <i class="fas fa-clone fa-lg" />
+              </button>
+            </a>
+          </li>
+        {/if}
 
-      <li>
+        <!-- <li>
         {#if user}
           <a href="/" on:click|preventDefault={logoutClick}>
             <span>로그아웃</span>
@@ -138,11 +139,12 @@
             </button>
           </a>
         {/if}
-      </li>
+      </li> -->
 
-    </ul>
-  {/if}
-  <button class:active class="toggle_btn" on:click={btnClick}>
-    <i class="fas fa-plus fa-2x" />
-  </button>
-</div>
+      </ul>
+    {/if}
+    <button class:active class="toggle_btn" on:click={btnClick}>
+      <i class="fas fa-plus fa-2x" />
+    </button>
+  </div>
+{/if}

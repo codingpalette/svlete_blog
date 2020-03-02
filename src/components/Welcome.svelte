@@ -28,6 +28,7 @@
   @media (min-width: 768px) {
     .welcome_container {
       height: calc(100vh - 30px);
+      padding-left: 250px;
     }
   }
 </style>

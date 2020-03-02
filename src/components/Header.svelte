@@ -2,6 +2,8 @@
   import { isSegment } from "../store/segment";
   import { onMount } from "svelte";
 
+  import UserSetting from "./auth/UserSetting.svelte";
+
   // sveltestrap
   import Container from "sveltestrap/src/Container.svelte";
   import Button from "sveltestrap/src/Button.svelte";
@@ -9,12 +11,24 @@
   import Col from "sveltestrap/src/Col.svelte";
 
   let innerWidth;
+  let headerMode;
+
+  const HeaderSizeEvent = e => {
+    // console.log(e);
+    if (e >= 768) {
+      headerMode = "desk";
+    } else {
+      headerMode = "mobile";
+    }
+  };
 
   onMount(() => {
     // console.log(innerWidth); // 실제 innerWidth 값이 출력됨
+    HeaderSizeEvent(innerWidth);
   });
-  const handleScroll = e => {
+  const handleResize = () => {
     // console.log(innerWidth);
+    HeaderSizeEvent(innerWidth);
   };
 </script>
 
@@ -25,18 +39,19 @@
     z-index: 500;
   }
 
-  .modile_header,
-  .modile_footer {
+  .mobile_header,
+  .mobile_footer {
     position: fixed;
     left: 0;
     width: 100%;
     height: 50px;
   }
-  .modile_header {
+  .mobile_header {
     top: 0;
     border-bottom: 1px solid #edf1f7;
+    z-index: 1000;
   }
-  .modile_footer {
+  .mobile_footer {
     bottom: 0;
     border-top: 1px solid #edf1f7;
   }
@@ -59,17 +74,17 @@
     max-height: 40px;
   }
 
-  .modile_footer ul {
+  .mobile_footer ul {
     display: flex;
     align-items: center;
     justify-content: center;
   }
 
-  .modile_footer ul li {
+  .mobile_footer ul li {
     flex: 1;
   }
 
-  .modile_footer ul li a {
+  .mobile_footer ul li a {
     display: flex;
     width: 100%;
     height: 50px;
@@ -81,16 +96,16 @@
     box-sizing: border-box;
   }
 
-  .modile_footer ul li a.selected {
+  .mobile_footer ul li a.selected {
     color: #007bff;
   }
 
-  .modile_footer ul li a i,
-  .modile_footer ul li a span {
+  .mobile_footer ul li a i,
+  .mobile_footer ul li a span {
     width: 100%;
   }
 
-  .modile_footer ul li a span {
+  .mobile_footer ul li a span {
     line-height: 1;
     font-size: 0.8rem;
     font-weight: 600;
@@ -101,8 +116,8 @@
   }
 
   @media (min-width: 768px) {
-    .modile_header,
-    .modile_footer {
+    .mobile_header,
+    .mobile_footer {
       display: none;
     }
 
@@ -114,7 +129,7 @@
       width: 250px;
       background-color: #fff;
       border-right: 1px solid #edf1f7;
-      z-index: 500;
+      z-index: 1000;
       height: 100%;
       padding: 15px 0;
       box-sizing: border-box;
@@ -146,9 +161,9 @@
   }
 </style>
 
-<svelte:window bind:innerWidth on:resize={handleScroll(innerWidth)} />
+<svelte:window bind:innerWidth on:resize={handleResize(innerWidth)} />
 <div class="header_box">
-  <header class="modile_header">
+  <header class="mobile_header">
     <Container>
       <Row>
         <Col>
@@ -160,8 +175,9 @@
         </Col>
       </Row>
     </Container>
+
   </header>
-  <footer class="modile_footer">
+  <footer class="mobile_footer">
     <nav>
       <ul>
         <li>
@@ -191,6 +207,7 @@
       </ul>
     </nav>
   </footer>
+
   <div class="desk_nav_box">
     <h1 class="logo_box">
       <a class:selected={$isSegment === undefined} href=".">
@@ -232,4 +249,6 @@
       </ul>
     </nav>
   </div>
+  <UserSetting />
+
 </div>
