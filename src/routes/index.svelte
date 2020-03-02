@@ -2,7 +2,7 @@
   import { goto } from "@sapper/app";
   import { onMount, beforeUpdate, afterUpdate } from "svelte";
   import { firebase } from "@firebase/app";
-  import { items, LastPost, LastScrollY } from "../store/homePost";
+  import { items, LastPost } from "../store/homePost";
   import { currentUser } from "../store/user";
 
   import Header from "../components/Header.svelte";
@@ -88,24 +88,20 @@
       if (innerWidth >= 2500) {
         getNum = 30;
       }
-      const res = await firebase
-        .firestore()
-        .collection("docs")
-        .orderBy("createdAt", "desc")
-        .limit(getNum)
-        .get();
-      // console.log(res);
-      isLoading = false;
 
+      // console.log(res);
       if ($items.length < 1) {
+        const res = await firebase
+          .firestore()
+          .collection("docs")
+          .orderBy("createdAt", "desc")
+          .limit(getNum)
+          .get();
         $items = res.docs.map(e => e.data());
         $LastPost = res.docs[res.docs.length - 1];
-      } else {
-        setTimeout(() => {
-          window.scrollTo({ top: $LastScrollY, left: 0, behavior: "smooth" });
-          //  behavior 값에  auto, instant, smooth
-        }, 500);
       }
+      isLoading = false;
+
       if (res.docs.length === 0) {
         notPage = true;
       }
@@ -114,11 +110,6 @@
       // console.log(e);
     }
   });
-
-  const linkEvent = i => {
-    $LastScrollY = scrollY;
-    goto(i);
-  };
 </script>
 
 <style>
@@ -209,10 +200,7 @@
     {#each $items as item}
       <Col sm="12" md="12" lg="6" xl="4" class="main_card_box">
         <Card class="mb-4 shadow border-0 rounded-lg ">
-          <a
-            href={`post/${item.category}/${item.url}`}
-            on:click|preventDefault={() => linkEvent(`post/${item.category}/${item.url}`)}
-            class="main_card">
+          <a href={`post/${item.category}/${item.url}`} class="main_card">
             <div class="card_title_box">
               <h2>{item.title}</h2>
               <div class="sub_box">

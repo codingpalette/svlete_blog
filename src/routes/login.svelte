@@ -1,7 +1,7 @@
 <script>
   import { goto } from "@sapper/app";
   import { currentUser } from "../store/user";
-  import { items, LastPost, LastScrollY } from "../store/homePost";
+  import { items, LastPost } from "../store/homePost";
 
   import FormBox from "../components/auth/FormBox.svelte";
   import LinkBox from "../components/auth/LinkBox.svelte";

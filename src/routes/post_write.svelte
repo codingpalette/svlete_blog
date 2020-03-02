@@ -18,7 +18,7 @@
   import { onMount } from "svelte";
   import { fly } from "svelte/transition";
   import { firebase } from "@firebase/app";
-  import { items, LastPost, LastScrollY } from "../store/homePost";
+  import { items, LastPost } from "../store/homePost";
   import { currentUser } from "../store/user";
 
   import Header from "../components/Header.svelte";
@@ -145,7 +145,6 @@
           .get();
         $items = res.docs.map(e => e.data());
         $LastPost = res.docs[res.docs.length - 1];
-        $LastScrollY = 0;
         return;
       }
 
@@ -154,7 +153,6 @@
           { title, category, url, description, tags, createdAt, date, id },
           ...$items
         ];
-        $LastScrollY = 0;
       } else {
         $items[$items.findIndex(i => i.id === id)] = {
           title,
