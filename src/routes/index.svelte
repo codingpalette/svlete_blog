@@ -102,7 +102,7 @@
       }
       isLoading = false;
 
-      if (res.docs.length === 0) {
+      if ($items.length === 0) {
         notPage = true;
       }
       // console.log($items);
