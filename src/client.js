@@ -4,9 +4,11 @@ import firebaseConfig from './firebaseConfig';
 import '@firebase/auth';
 import '@firebase/firestore';
 import '@firebase/functions';
+import '@firebase/analytics';
 
 sapper.start({
   target: document.querySelector('#sapper')
 });
 
 firebase.initializeApp(firebaseConfig);
+firebase.analytics();

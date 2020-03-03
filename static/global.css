@@ -31,7 +31,7 @@ button {
 }
 
 body {
-  color: #5f6c91;
+  /* color: #5f6c91; */
   background-color: #fafafa;
 }
 a {
@@ -70,3 +70,4 @@ html {
     padding: 1rem 0 1rem 250px;
   }
 }
+@import './../node_modules/quill/dist/quill.snow.css';

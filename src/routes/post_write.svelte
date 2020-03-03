@@ -39,6 +39,7 @@
   let isCardLoading = false;
   let isCardOk = false;
   let isCardError = false;
+  let quillEditor;
 
   let formData = {
     title: "",
@@ -53,18 +54,6 @@
     const user = JSON.parse(localStorage.getItem("__palette_user__"));
     !user && goto("/");
     user && user.level !== 0 && goto("/");
-  });
-
-  afterUpdate(() => {
-    if ($currentUser) {
-      tuiEditor = new tui.Editor({
-        el: document.querySelector("#editorSection"),
-        initialEditType: "wysiwyg", // 'markdown'
-        previewStyle: "vertical",
-        height: "500px",
-        initialValue: formData.content
-      });
-    }
   });
 
   // Object.entries(obj).length === 0 && obj.constructor === Object
@@ -124,7 +113,10 @@
 
     const modifiedAt = today;
     const { title, category, url, description, tags } = formData;
-    const content = tuiEditor.getMarkdown();
+    const content = quillEditor.root.innerHTML;
+    console.log(content);
+    // return;
+    // const content = tuiEditor.getMarkdown();
     const id = category + "_" + url;
 
     try {
@@ -201,18 +193,27 @@
       formData = metaRead.data();
       // console.log(metaRead.data());
       // console.log(docRead.data());
-      formData.content = docRead.data().content;
-      tuiEditor = new tui.Editor({
-        el: document.querySelector("#editorSection"),
-        initialEditType: "wysiwyg", // 'markdown'
-        previewStyle: "vertical",
-        height: "500px",
-        initialValue: formData.content
-      });
+      quillEditor.root.innerHTML = docRead.data().content;
     });
   }
 
-  onMount(() => {});
+  onMount(async () => {
+    const quillModule = await import("quill/dist/quill");
+    const Quill = quillModule.default;
+    quillEditor = new Quill("#editor-container", {
+      syntax: true,
+      modules: {
+        toolbar: [
+          [{ header: [1, 2, false] }],
+          ["bold", "italic", "underline", "strike"],
+          [{ list: "ordered" }, { list: "bullet" }],
+          ["blockquote", "code-block", "link", "image"]
+        ]
+      },
+      placeholder: "Compose an epic...",
+      theme: "snow" // or 'bubble , snow'
+    });
+  });
 </script>
 
 <style>
@@ -295,6 +296,10 @@
   .tag_btn:hover {
     opacity: 0.8;
   }
+  /* Quill 관련 css */
+  :global(.editor_content) {
+    color: #222;
+  }
 
   @media (min-width: 768px) {
     .write_top_container {
@@ -317,112 +322,110 @@
   }
 </style>
 
-{#if $isLoadComplete && $currentUser}
+<Header />
 
-  <Header />
+<div class="write_top_container">
+  <Container>
+    <div class="write_top">
+      <a href="/" class="btn">
+        <i class="fas fa-times fa-lg" />
+      </a>
+      <h1>
+        {#if Mode === 'create'}포스트 작성{:else}포스트 수정{/if}
+      </h1>
+      <button class="btn" on:click={modalToggle}>
+        <i class="fas fa-check fa-lg" />
+      </button>
+    </div>
+  </Container>
+</div>
 
-  <div class="write_top_container">
-    <Container>
-      <div class="write_top">
-        <a href="/" class="btn">
-          <i class="fas fa-times fa-lg" />
-        </a>
-        <h1>
-          {#if Mode === 'create'}포스트 작성{:else}포스트 수정{/if}
-        </h1>
-        <button class="btn" on:click={modalToggle}>
-          <i class="fas fa-check fa-lg" />
-        </button>
-      </div>
-    </Container>
-  </div>
-
-  <div class="write_main_container">
-    <Container>
-      <div class="form_box">
-        <FormGroup>
-          <Label for="title" class="label">제목*</Label>
+<div class="write_main_container">
+  <Container>
+    <div class="form_box">
+      <FormGroup>
+        <Label for="title" class="label">제목*</Label>
+        <Input
+          type="text"
+          name="title"
+          id="title"
+          bind:value={formData.title}
+          placeholder="제목을 입력해주세요." />
+      </FormGroup>
+      <FormGroup>
+        <Label for="category" class="label">카테고리</Label>
+        <select
+          type="select"
+          name="category"
+          id="category"
+          class="form_category"
+          bind:value={formData.category}>
+          <option value="html">html</option>
+          <option value="css">css</option>
+          <option value="javascript">javascript</option>
+        </select>
+      </FormGroup>
+      <FormGroup>
+        <Label for="url" class="label">URL*</Label>
+        {#if Mode === 'create'}
           <Input
             type="text"
-            name="title"
-            id="title"
-            bind:value={formData.title}
-            placeholder="제목을 입력해주세요." />
-        </FormGroup>
-        <FormGroup>
-          <Label for="category" class="label">카테고리</Label>
-          <select
-            type="select"
-            name="category"
-            id="category"
-            class="form_category"
-            bind:value={formData.category}>
-            <option value="html">html</option>
-            <option value="css">css</option>
-            <option value="javascript">javascript</option>
-          </select>
-        </FormGroup>
-        <FormGroup>
-          <Label for="url" class="label">URL*</Label>
-          {#if Mode === 'create'}
-            <Input
-              type="text"
-              name="url"
-              id="url"
-              bind:value={formData.url}
-              placeholder="url을 입력해주세요." />
-          {:else}
-            <Input
-              class="active"
-              type="text"
-              name="url"
-              id="url"
-              bind:value={formData.url}
-              placeholder="url을 입력해주세요." />
-          {/if}
-        </FormGroup>
-        <FormGroup>
-          <Label for="description" class="label">포스트 소개*</Label>
+            name="url"
+            id="url"
+            bind:value={formData.url}
+            placeholder="url을 입력해주세요." />
+        {:else}
           <Input
-            type="textarea"
-            name="description"
-            id="description"
-            rows="3"
-            maxlength="150"
-            bind:value={formData.description}
-            placeholder="포스트를 짧게 작성해주세요." />
-        </FormGroup>
-        <FormGroup>
-          <Label for="tag" class="label">태그</Label>
-          <form on:submit|preventDefault={tagSubmit}>
-            <Input
-              type="text"
-              name="tag"
-              id="tag"
-              bind:value={tag}
-              placeholder="태그를 입력해주세요." />
-          </form>
-          <ul>
-            <li>
-              {#each formData.tags as tags}
-                <button class="tag_btn" on:click={() => tagRemove(tags)}>
-                  {tags}
-                </button>
-              {/each}
-            </li>
-          </ul>
-        </FormGroup>
-        <div id="editorSection" />
-      </div>
-    </Container>
-  </div>
+            class="active"
+            type="text"
+            name="url"
+            id="url"
+            bind:value={formData.url}
+            placeholder="url을 입력해주세요." />
+        {/if}
+      </FormGroup>
+      <FormGroup>
+        <Label for="description" class="label">포스트 소개*</Label>
+        <Input
+          type="textarea"
+          name="description"
+          id="description"
+          rows="3"
+          maxlength="150"
+          bind:value={formData.description}
+          placeholder="포스트를 짧게 작성해주세요." />
+      </FormGroup>
+      <FormGroup>
+        <Label for="tag" class="label">태그</Label>
+        <form on:submit|preventDefault={tagSubmit}>
+          <Input
+            type="text"
+            name="tag"
+            id="tag"
+            bind:value={tag}
+            placeholder="태그를 입력해주세요." />
+        </form>
+        <ul>
+          <li>
+            {#each formData.tags as tags}
+              <button class="tag_btn" on:click={() => tagRemove(tags)}>
+                {tags}
+              </button>
+            {/each}
+          </li>
+        </ul>
+      </FormGroup>
 
-  <PostPopup
-    {modalOpen}
-    {isCardLoading}
-    {isCardOk}
-    {isCardError}
-    {submitEvent}
-    {modalToggle}
-    {Mode} />
-{/if}
+      <div class="editor_content ql-snow" id="editor-container" />
+    </div>
+  </Container>
+</div>
+
+<PostPopup
+  {modalOpen}
+  {isCardLoading}
+  {isCardOk}
+  {isCardError}
+  {submitEvent}
+  {modalToggle}
+  {Mode} />
