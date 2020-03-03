@@ -1,6 +1,7 @@
 <script>
   import { goto } from "@sapper/app";
-  import { currentUser } from "../store/user";
+  import { beforeUpdate } from "svelte";
+  import { currentUser, isLoadComplete } from "../store/user";
   import { items, LastPost } from "../store/homePost";
 
   import FormBox from "../components/auth/FormBox.svelte";
@@ -8,11 +9,9 @@
   import Social from "../components/auth/Social.svelte";
   import HomePostStoreReset from "../components/HomePostStoreReset.svelte";
 
-  if ($currentUser) goto("/");
+  // if ($currentUser) goto("/");
   const MyUrl = "login";
   const Link = "signup";
-
-  // console.log(location);
 </script>
 
 <style>
@@ -51,7 +50,7 @@
   <title>로그인</title>
 </svelte:head>
 <HomePostStoreReset />
-{#if !$currentUser}
+{#if $isLoadComplete && !$currentUser}
   <div class="auth_container">
     <div class="auth_content">
       <h2 class="home_link">

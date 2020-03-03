@@ -3,7 +3,7 @@
   import { onMount } from "svelte";
   import { fly } from "svelte/transition";
   import { firebase } from "@firebase/app";
-  import { currentUser } from "../store/user";
+  import { currentUser, isLoadComplete } from "../store/user";
 
   let active = false;
   let user = "";
@@ -11,21 +11,6 @@
   onMount(() => {
     user = JSON.parse(localStorage.getItem("__palette_user__"));
   });
-
-  const logoutClick = async () => {
-    try {
-      await firebase.auth().signOut();
-      active = false;
-      user = "";
-      goto("/");
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
-  const loginClick = () => {
-    window.location.href = "/login";
-  };
 
   const postWriteClick = () => {
     active = false;
@@ -99,7 +84,7 @@
   }
 </style>
 
-{#if user}
+{#if $currentUser}
   <div class="logged_in_btn_container">
     {#if active}
       <ul in:fly={{ y: 10, duration: 500 }} out:fly={{ y: 10, duration: 500 }}>

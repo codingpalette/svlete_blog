@@ -1,16 +1,18 @@
 <script>
   import { onMount } from "svelte";
   import { firebase } from "@firebase/app";
-  import { currentUser } from "../store/user";
+  import { currentUser, isLoadComplete } from "../store/user";
 
   const userState = async user => {
     try {
       const token = await user.getIdToken();
       const { claims } = await user.getIdTokenResult();
-      $currentUser = [token, claims];
-      // console.log(user);
+      const { photoURL, email } = user;
+      $currentUser = { token, claims, photoURL, email };
+      $isLoadComplete = true;
+      // console.log($currentUser);
       // console.log(token);
-      const { user_id, level } = $currentUser[1];
+      const { user_id, level } = $currentUser.claims;
       localStorage.setItem(
         "__palette_user__",
         JSON.stringify({ user_id, level, token })
@@ -27,6 +29,7 @@
         userState(user);
       } else {
         $currentUser = null;
+        $isLoadComplete = true;
         localStorage.removeItem("__palette_user__");
       }
     });

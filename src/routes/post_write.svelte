@@ -5,8 +5,8 @@
   export function preload(page, session) {
     // the `slug` parameter is available because this file
     // is called [slug].svelte
-    const { path, query } = page;
-    return { path, query };
+    const { query } = page;
+    return { query };
     // console.log(query);
   }
 </script>
@@ -15,11 +15,11 @@
   export let query;
 
   import { goto } from "@sapper/app";
-  import { onMount } from "svelte";
+  import { onMount, beforeUpdate, afterUpdate } from "svelte";
   import { fly } from "svelte/transition";
   import { firebase } from "@firebase/app";
   import { items, LastPost } from "../store/homePost";
-  import { currentUser } from "../store/user";
+  import { currentUser, isLoadComplete } from "../store/user";
 
   import Header from "../components/Header.svelte";
   import PostPopup from "../components/post/PostPopup.svelte";
@@ -49,10 +49,21 @@
     content: ""
   };
 
-  onMount(() => {
+  beforeUpdate(() => {
     const user = JSON.parse(localStorage.getItem("__palette_user__"));
-    if (user.level !== 0) {
-      goto("/");
+    !user && goto("/");
+    user && user.level !== 0 && goto("/");
+  });
+
+  afterUpdate(() => {
+    if ($currentUser) {
+      tuiEditor = new tui.Editor({
+        el: document.querySelector("#editorSection"),
+        initialEditType: "wysiwyg", // 'markdown'
+        previewStyle: "vertical",
+        height: "500px",
+        initialValue: formData.content
+      });
     }
   });
 
@@ -201,15 +212,7 @@
     });
   }
 
-  onMount(() => {
-    tuiEditor = new tui.Editor({
-      el: document.querySelector("#editorSection"),
-      initialEditType: "wysiwyg", // 'markdown'
-      previewStyle: "vertical",
-      height: "500px",
-      initialValue: formData.content
-    });
-  });
+  onMount(() => {});
 </script>
 
 <style>
@@ -247,6 +250,7 @@
     background-color: #fff;
     padding: 50px 0;
     min-height: 100vh;
+    opacity: 1;
   }
 
   .write_main_container .form_box {
@@ -313,109 +317,112 @@
   }
 </style>
 
-<Header />
+{#if $isLoadComplete && $currentUser}
 
-<div class="write_top_container">
-  <Container>
-    <div class="write_top">
-      <a href="/" class="btn">
-        <i class="fas fa-times fa-lg" />
-      </a>
-      <h1>
-        {#if Mode === 'create'}포스트 작성{:else}포스트 수정{/if}
-      </h1>
-      <button class="btn" on:click={modalToggle}>
-        <i class="fas fa-check fa-lg" />
-      </button>
-    </div>
-  </Container>
-</div>
+  <Header />
 
-<div class="write_main_container">
-  <Container>
-    <div class="form_box">
-      <FormGroup>
-        <Label for="title" class="label">제목*</Label>
-        <Input
-          type="text"
-          name="title"
-          id="title"
-          bind:value={formData.title}
-          placeholder="제목을 입력해주세요." />
-      </FormGroup>
-      <FormGroup>
-        <Label for="category" class="label">카테고리</Label>
-        <select
-          type="select"
-          name="category"
-          id="category"
-          class="form_category"
-          bind:value={formData.category}>
-          <option value="html">html</option>
-          <option value="css">css</option>
-          <option value="javascript">javascript</option>
-        </select>
-      </FormGroup>
-      <FormGroup>
-        <Label for="url" class="label">URL*</Label>
-        {#if Mode === 'create'}
+  <div class="write_top_container">
+    <Container>
+      <div class="write_top">
+        <a href="/" class="btn">
+          <i class="fas fa-times fa-lg" />
+        </a>
+        <h1>
+          {#if Mode === 'create'}포스트 작성{:else}포스트 수정{/if}
+        </h1>
+        <button class="btn" on:click={modalToggle}>
+          <i class="fas fa-check fa-lg" />
+        </button>
+      </div>
+    </Container>
+  </div>
+
+  <div class="write_main_container">
+    <Container>
+      <div class="form_box">
+        <FormGroup>
+          <Label for="title" class="label">제목*</Label>
           <Input
             type="text"
-            name="url"
-            id="url"
-            bind:value={formData.url}
-            placeholder="url을 입력해주세요." />
-        {:else}
+            name="title"
+            id="title"
+            bind:value={formData.title}
+            placeholder="제목을 입력해주세요." />
+        </FormGroup>
+        <FormGroup>
+          <Label for="category" class="label">카테고리</Label>
+          <select
+            type="select"
+            name="category"
+            id="category"
+            class="form_category"
+            bind:value={formData.category}>
+            <option value="html">html</option>
+            <option value="css">css</option>
+            <option value="javascript">javascript</option>
+          </select>
+        </FormGroup>
+        <FormGroup>
+          <Label for="url" class="label">URL*</Label>
+          {#if Mode === 'create'}
+            <Input
+              type="text"
+              name="url"
+              id="url"
+              bind:value={formData.url}
+              placeholder="url을 입력해주세요." />
+          {:else}
+            <Input
+              class="active"
+              type="text"
+              name="url"
+              id="url"
+              bind:value={formData.url}
+              placeholder="url을 입력해주세요." />
+          {/if}
+        </FormGroup>
+        <FormGroup>
+          <Label for="description" class="label">포스트 소개*</Label>
           <Input
-            class="active"
-            type="text"
-            name="url"
-            id="url"
-            bind:value={formData.url}
-            placeholder="url을 입력해주세요." />
-        {/if}
-      </FormGroup>
-      <FormGroup>
-        <Label for="description" class="label">포스트 소개*</Label>
-        <Input
-          type="textarea"
-          name="description"
-          id="description"
-          rows="3"
-          maxlength="150"
-          bind:value={formData.description}
-          placeholder="포스트를 짧게 작성해주세요." />
-      </FormGroup>
-      <FormGroup>
-        <Label for="tag" class="label">태그</Label>
-        <form on:submit|preventDefault={tagSubmit}>
-          <Input
-            type="text"
-            name="tag"
-            id="tag"
-            bind:value={tag}
-            placeholder="태그를 입력해주세요." />
-        </form>
-        <ul>
-          <li>
-            {#each formData.tags as tags}
-              <button class="tag_btn" on:click={() => tagRemove(tags)}>
-                {tags}
-              </button>
-            {/each}
-          </li>
-        </ul>
-      </FormGroup>
-      <div id="editorSection" />
-    </div>
-  </Container>
-</div>
+            type="textarea"
+            name="description"
+            id="description"
+            rows="3"
+            maxlength="150"
+            bind:value={formData.description}
+            placeholder="포스트를 짧게 작성해주세요." />
+        </FormGroup>
+        <FormGroup>
+          <Label for="tag" class="label">태그</Label>
+          <form on:submit|preventDefault={tagSubmit}>
+            <Input
+              type="text"
+              name="tag"
+              id="tag"
+              bind:value={tag}
+              placeholder="태그를 입력해주세요." />
+          </form>
+          <ul>
+            <li>
+              {#each formData.tags as tags}
+                <button class="tag_btn" on:click={() => tagRemove(tags)}>
+                  {tags}
+                </button>
+              {/each}
+            </li>
+          </ul>
+        </FormGroup>
+        <div id="editorSection" />
+      </div>
+    </Container>
+  </div>
 
-<PostPopup
-  {modalOpen}
-  {isCardLoading}
-  {isCardOk}
-  {isCardError}
-  {submitEvent}
-  {modalToggle}
-  {Mode} />
+  <PostPopup
+    {modalOpen}
+    {isCardLoading}
+    {isCardOk}
+    {isCardError}
+    {submitEvent}
+    {modalToggle}
+    {Mode} />
+{/if}

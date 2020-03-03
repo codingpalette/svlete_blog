@@ -1,25 +1,13 @@
 <script>
-  import { onMount } from "svelte";
+  import { goto } from "@sapper/app";
   import { fly } from "svelte/transition";
-  import { currentUser } from "../../store/user";
+  import { currentUser, isLoadComplete } from "../../store/user";
   import { firebase } from "@firebase/app";
 
   import Button from "sveltestrap/src/Button.svelte";
 
-  let user = false;
-  let photoURL = "";
-  let isLoading = true;
   let modalActive = false;
 
-  onMount(async () => {
-    user = JSON.parse(localStorage.getItem("__palette_user__"));
-    await firebase.auth().onAuthStateChanged(data => {
-      if (data) {
-        photoURL = data.photoURL;
-      }
-    });
-    isLoading = false;
-  });
   const UserWrapClick = () => {
     modalActive = !modalActive;
   };
@@ -27,7 +15,6 @@
     try {
       await firebase.auth().signOut();
       modalActive = false;
-      user = "";
       goto("/");
     } catch (e) {
       console.log(e);
@@ -116,33 +103,24 @@
     justify-content: space-between;
   }
   .modal_body .photo_box {
-    max-width: 100px;
-    max-height: 100px;
+    max-width: 80px;
+    max-height: 80px;
     border-radius: 50%;
     overflow: hidden;
     width: 100%;
     border: 1px solid #fafafa;
     box-sizing: border-box;
   }
-  .modal_body .photo_box button {
+  .modal_body .photo_box div {
     display: block;
     width: 100%;
     height: 100%;
-  }
-  .modal_body .photo_box button:focus {
-    outline: none;
-  }
-  .modal_body .photo_box label {
-    margin-bottom: 0;
   }
   .modal_body .photo_box img {
     display: block;
     object-fit: cover;
     width: 100%;
     height: 100%;
-  }
-  .modal_body .photo_box input {
-    display: none;
   }
   .modal_body .profile_box {
     width: 100%;
@@ -172,8 +150,8 @@
       padding: 2rem;
     }
     .modal_body .photo_box {
-      max-width: 120px;
-      max-height: 120px;
+      max-width: 100px;
+      max-height: 100px;
     }
     .modal_body .profile_box .title {
       width: 20%;
@@ -181,16 +159,16 @@
   }
 </style>
 
-{#if !isLoading}
+{#if $isLoadComplete}
   <div class="user_setting_container">
-    {#if !user}
+    {#if !$currentUser}
       <a href="/login" class="login_btn">
         <i class="fas fa-sign-in-alt fa-lg" />
       </a>
     {:else}
       <button class="user_wrap" on:click={UserWrapClick}>
-        {#if photoURL && photoURL.length > 1}
-          <img src={photoURL} alt="profile_img" />
+        {#if $currentUser.photoURL && $currentUser.photoURL.length > 1}
+          <img src={$currentUser.photoURL} alt="profile_img" />
         {:else}
           <img src="image/not_profile_img.png" alt="not_profile_img" />
         {/if}
@@ -214,25 +192,22 @@
         </div>
         <ul class="modal_body">
           <li class="photo_box">
-            <button>
-              <label for="photo">
-                {#if photoURL && photoURL.length > 1}
-                  <img src={photoURL} alt="profile_img" />
-                {:else}
-                  <img src="image/not_profile_img.png" alt="not_profile_img" />
-                {/if}
-                <input id="photo" type="file" />
-              </label>
-            </button>
+            <div>
+              {#if $currentUser.photoURL && $currentUser.photoURL.length > 1}
+                <img src={$currentUser.photoURL} alt="profile_img" />
+              {:else}
+                <img src="image/not_profile_img.png" alt="not_profile_img" />
+              {/if}
+            </div>
           </li>
           <li class="profile_box">
-            <div class="name">
+            <!-- <div class="name">
               <span class="title">이름</span>
               <span class="content">홍길동</span>
-            </div>
+            </div> -->
             <div class="email">
               <span class="title">이메일</span>
-              <span class="content">adff22r@nacv.com</span>
+              <span class="content">{$currentUser.email}</span>
             </div>
           </li>
         </ul>
