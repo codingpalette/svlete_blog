@@ -24,7 +24,7 @@
 
 <style>
   .user_setting_container {
-    position: absolute;
+    position: fixed;
     right: 15px;
     top: 5px;
     width: 40px;
@@ -98,6 +98,7 @@
   }
   .modal_body {
     margin-top: 1rem;
+    margin-bottom: 1rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -211,6 +212,7 @@
             </div>
           </li>
         </ul>
+        <Button color="danger" block on:click={UserWrapClick}>닫기</Button>
       </div>
     </div>
     <div class="back" on:click={UserWrapClick} />

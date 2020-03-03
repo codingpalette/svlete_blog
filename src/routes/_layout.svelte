@@ -2,6 +2,7 @@
   export let segment;
   import UserObserver from "../components/UserObserver.svelte";
   import { isSegment } from "../store/segment";
+  import LoggedInBtn from "../components/LoggedInBtn.svelte";
   $: $isSegment = segment;
 </script>
 
@@ -21,6 +22,8 @@
 </style>
 
 <UserObserver />
+
+<LoggedInBtn />
 <main>
   <slot />
 </main>

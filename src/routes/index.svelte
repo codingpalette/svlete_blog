@@ -7,7 +7,6 @@
 
   import Header from "../components/Header.svelte";
   import TransitionWrapper from "../components/TransitionWrapper.svelte";
-  import LoggedInBtn from "../components/LoggedInBtn.svelte";
   import Welcome from "../components/Welcome.svelte";
   import Skeleton from "../components/Skeleton.svelte";
 
@@ -185,7 +184,6 @@
   bind:innerHeight
   on:scroll={handleScroll(scrollY, innerWidth, innerHeight)} />
 
-<LoggedInBtn />
 <Header />
 
 {#if isLoading}
