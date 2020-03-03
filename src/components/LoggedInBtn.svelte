@@ -1,24 +1,21 @@
 <script>
   import { goto } from "@sapper/app";
-  import { onMount } from "svelte";
+  import { onMount, onDestroy } from "svelte";
   import { fly } from "svelte/transition";
   import { firebase } from "@firebase/app";
   import { currentUser, isLoadComplete } from "../store/user";
 
   let active = false;
-  let user = "";
-
-  onMount(() => {
-    user = JSON.parse(localStorage.getItem("__palette_user__"));
-  });
 
   const postWriteClick = () => {
     active = false;
     goto("/post_write");
   };
+
   // console.log($currentUser);
 
   const btnClick = () => (active = !active);
+  const adminClick = () => (active = !active);
 </script>
 
 <style>
@@ -89,9 +86,9 @@
     {#if active}
       <ul in:fly={{ y: 10, duration: 500 }} out:fly={{ y: 10, duration: 500 }}>
         <!-- <ul > -->
-        {#if user && user.level === 0}
+        {#if $currentUser && $currentUser.claims.level === 0}
           <li>
-            <a href="/admin">
+            <a href="/admin" on:click|preventDefault={adminClick}>
               <span>관리자</span>
               <button class="shadow-sm">
                 <i class="fas fa-user-cog fa-lg" />
@@ -107,25 +104,6 @@
             </a>
           </li>
         {/if}
-
-        <!-- <li>
-        {#if user}
-          <a href="/" on:click|preventDefault={logoutClick}>
-            <span>로그아웃</span>
-            <button class="shadow-sm">
-              <i class="fas fa-sign-in-alt fa-lg" />
-            </button>
-          </a>
-        {:else}
-          <a href="/login" on:click|preventDefault={loginClick}>
-            <span>로그인</span>
-            <button class="shadow-sm">
-              <i class="fas fa-sign-in-alt fa-lg" />
-            </button>
-          </a>
-        {/if}
-      </li> -->
-
       </ul>
     {/if}
     <button class:active class="toggle_btn" on:click={btnClick}>

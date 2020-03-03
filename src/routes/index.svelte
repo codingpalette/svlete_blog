@@ -176,6 +176,7 @@
 
 <svelte:head>
   <title>codingpalette</title>
+
 </svelte:head>
 
 <svelte:window
