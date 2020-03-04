@@ -88,16 +88,16 @@
       .get();
 
     viewContent = metaRead.data();
-    // viewContent.content = docRead.data().content.replace(/^\t{3}/gm, "");
+    viewContent.content = docRead.data().content.replace(/^\t{3}/gm, "");
     isViewLoading = false;
-    setTimeout(() => {
-      tuiEditor = new tui.Editor.factory({
-        el: document.querySelector("#editorSection"),
-        viewer: true,
-        height: "500px",
-        initialValue: docRead.data().content
-      });
-    }, 0);
+    // setTimeout(() => {
+    //   tuiEditor = new tui.Editor.factory({
+    //     el: document.querySelector("#editorSection"),
+    //     viewer: true,
+    //     height: "500px",
+    //     initialValue: docRead.data().content
+    //   });
+    // }, 0);
   });
 </script>
 
@@ -166,6 +166,10 @@
 <svelte:head>
   <title>{viewContent.title}</title>
   <meta name="description" content={viewContent.description} />
+  <meta
+    property="og:image"
+    content="https://firebasestorage.googleapis.com/v0/b/my-blog-7d61e.appspot.com/o/banner-image.png?alt=media&token=1dfda7d3-0a0f-4837-b682-e7d783b85908"
+    data-rh="true" />
   <!-- <meta name="keywords" content="{post.metadata.keywords}"/> -->
 
   <!-- Open Graph / Facebook -->
@@ -214,12 +218,12 @@
   {/if}
   <TransitionWrapper>
     <div class="view_container">
-      <Container>
-        <div class="view_content shadow rounded-lg">
+      <Container class="ql-snow">
+        <div class="view_content ql-editor rounded-lg">
 
-          <div id="editorSection" />
+          <!-- <div id="editorSection" /> -->
 
-          <!-- {@html viewContent.content} -->
+          {@html viewContent.content}
         </div>
       </Container>
     </div>

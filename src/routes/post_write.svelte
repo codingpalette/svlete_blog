@@ -198,15 +198,17 @@
   }
 
   onMount(async () => {
+    // import("quill/dist/quill.snow.css");
     const quillModule = await import("quill/dist/quill");
     const Quill = quillModule.default;
     quillEditor = new Quill("#editor-container", {
       syntax: true,
       modules: {
         toolbar: [
-          [{ header: [1, 2, false] }],
+          [{ header: [1, 2, 3, false] }],
           ["bold", "italic", "underline", "strike"],
           [{ list: "ordered" }, { list: "bullet" }],
+          [{ color: [] }, { background: [] }],
           ["blockquote", "code-block", "link", "image"]
         ]
       },
@@ -416,7 +418,7 @@
         </ul>
       </FormGroup>
 
-      <div class="editor_content ql-snow" id="editor-container" />
+      <div class="editor_content" id="editor-container" />
     </div>
   </Container>
 </div>

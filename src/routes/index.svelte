@@ -176,7 +176,14 @@
 
 <svelte:head>
   <title>codingpalette</title>
-
+  <meta
+    name="description"
+    content="좋은 개발자를 꿈꾸는 코딩팔레트 입니다."
+    data-rh="true" />
+  <meta
+    property="og:image"
+    content="https://firebasestorage.googleapis.com/v0/b/my-blog-7d61e.appspot.com/o/banner-image.png?alt=media&token=1dfda7d3-0a0f-4837-b682-e7d783b85908"
+    data-rh="true" />
 </svelte:head>
 
 <svelte:window
