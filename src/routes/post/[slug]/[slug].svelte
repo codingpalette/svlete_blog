@@ -166,10 +166,7 @@
 <svelte:head>
   <title>{viewContent.title}</title>
   <meta name="description" content={viewContent.description} />
-  <meta
-    property="og:image"
-    content="https://firebasestorage.googleapis.com/v0/b/my-blog-7d61e.appspot.com/o/banner-image.png?alt=media&token=1dfda7d3-0a0f-4837-b682-e7d783b85908"
-    data-rh="true" />
+
   <!-- <meta name="keywords" content="{post.metadata.keywords}"/> -->
 
   <!-- Open Graph / Facebook -->
@@ -177,6 +174,9 @@
   <!-- <meta property="og:url" content="https://lacourt.dev/{post.slug}"> -->
   <meta property="og:title" content={viewContent.title} />
   <meta property="og:description" content={viewContent.description} />
+  <meta
+    property="og:image"
+    content="https://firebasestorage.googleapis.com/v0/b/my-blog-7d61e.appspot.com/o/banner-image.png?alt=media&token=1dfda7d3-0a0f-4837-b682-e7d783b85908" />
   <!--
   {#if post.metadata.thumb}
   <meta property="og:image" content="{post.metadata.thumb}">
@@ -188,15 +188,15 @@
   <!-- <meta property="twitter:url" content="https://lacourt.dev/{post.slug}"> -->
   <meta property="twitter:title" content={viewContent.title} />
   <meta property="twitter:description" content={viewContent.description} />
+  <meta
+    property="twitter:image"
+    content="https://firebasestorage.googleapis.com/v0/b/my-blog-7d61e.appspot.com/o/banner-image.png?alt=media&token=1dfda7d3-0a0f-4837-b682-e7d783b85908" />
   <!--
   {#if post.metadata.thumb}
   <meta property="twitter:image" content="{post.metadata.thumb}">
   {/if}
   -->
 
-  <meta name="title" content={viewContent.title} />
-  <meta name="twitter:title" content={viewContent.title} />
-  <meta property="og:title" content={viewContent.title} />
 </svelte:head>
 
 <Header />
