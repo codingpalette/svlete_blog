@@ -365,6 +365,8 @@
           <option value="html">html</option>
           <option value="css">css</option>
           <option value="javascript">javascript</option>
+          <option value="react">react</option>
+          <option value="svelte">svelte</option>
         </select>
       </FormGroup>
       <FormGroup>

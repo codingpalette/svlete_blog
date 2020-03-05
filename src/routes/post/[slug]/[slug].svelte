@@ -233,7 +233,7 @@
   <TransitionWrapper>
     <div class="view_container">
       <Container class="ql-snow">
-        <div class="view_content ql-editor rounded-lg">
+        <div class="view_content ql-editor shadow border-0 rounded-lg">
 
           <!-- <div id="editorSection" /> -->
 
