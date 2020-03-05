@@ -164,7 +164,11 @@
 </style>
 
 <svelte:head>
-  <title>{viewContent.title}</title>
+  {#if viewContent.title}
+    <title>{viewContent.title}</title>
+  {:else}
+    <title>codingpalette</title>
+  {/if}
   <meta name="description" content={viewContent.description} />
 
   <!-- <meta name="keywords" content="{post.metadata.keywords}"/> -->
@@ -172,7 +176,12 @@
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website" />
   <!-- <meta property="og:url" content="https://lacourt.dev/{post.slug}"> -->
-  <meta property="og:title" content={viewContent.title} />
+  {#if viewContent.title}
+    <meta property="og:title" content={viewContent.title} />
+  {:else}
+    <meta property="og:title" content="codingpalette" />
+  {/if}
+
   <meta property="og:description" content={viewContent.description} />
   <meta
     property="og:image"
@@ -186,7 +195,12 @@
   <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image" />
   <!-- <meta property="twitter:url" content="https://lacourt.dev/{post.slug}"> -->
-  <meta property="twitter:title" content={viewContent.title} />
+  {#if viewContent.title}
+    <meta property="twitter:title" content={viewContent.title} />
+  {:else}
+    <meta property="twitter:title" content="codingpalette" />
+  {/if}
+
   <meta property="twitter:description" content={viewContent.description} />
   <meta
     property="twitter:image"

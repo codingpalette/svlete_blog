@@ -36,13 +36,19 @@
     margin: auto;
     box-shadow: 0 1px 5px 0 rgba(0, 0, 0, 0.1),
       0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 2px 2px 0 rgba(0, 0, 0, 0.14);
-    padding: 30px 15px 15px;
+    padding: 1rem;
     box-sizing: border-box;
   }
   .home_link {
     text-align: center;
     font-size: 1.3rem;
     margin-bottom: 1rem;
+  }
+  .home_link img {
+    display: block;
+    max-width: 50px;
+    height: auto;
+    margin: 0 auto;
   }
 </style>
 
@@ -54,7 +60,9 @@
   <div class="auth_container">
     <div class="auth_content">
       <h2 class="home_link">
-        <a href="/">codingpalette</a>
+        <a href=".">
+          <img src="image/cp03.png" alt="logo" />
+        </a>
       </h2>
       <FormBox {MyUrl} />
       <LinkBox {Link} />
