@@ -50,6 +50,10 @@
     content: ""
   };
 
+  // 이미지 저장 관련 변수
+  let imgCount = 0;
+  let imgDatas = [];
+
   beforeUpdate(() => {
     const user = JSON.parse(localStorage.getItem("__palette_user__"));
     !user && goto("/");
@@ -176,6 +180,35 @@
     }
   };
 
+  const selectLocalImage = () => {
+    const input = document.createElement("input");
+    input.setAttribute("type", "file");
+    input.click();
+    input.onchange = async () => {
+      // const fd = new FormData();
+
+      const file = input.files[0];
+      const _name = file.name;
+      // console.log(file);
+
+      const RandomNumber = Math.random()
+        .toString(36)
+        .substr(2, 11);
+      const storageRef = firebase.storage().ref();
+      const res = await storageRef
+        .child(`docs/${RandomNumber}/${_name}`)
+        .put(file);
+
+      // console.log(res);
+      const url = await storageRef
+        .child(`docs/${RandomNumber}/${_name}`)
+        .getDownloadURL();
+      // console.log(url);
+      const range = quillEditor.getSelection();
+      quillEditor.insertEmbed(range.index, "image", `${url}`);
+    };
+  };
+
   if (Mode === "modify") {
     onMount(async () => {
       const pathname = query.id;
@@ -214,6 +247,9 @@
       },
       placeholder: "Compose an epic...",
       theme: "snow" // or 'bubble , snow'
+    });
+    quillEditor.getModule("toolbar").addHandler("image", function() {
+      selectLocalImage();
     });
   });
 </script>
