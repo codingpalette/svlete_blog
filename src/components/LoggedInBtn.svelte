@@ -11,11 +11,14 @@
     active = false;
     goto("/post_write");
   };
+  const adminClick = () => {
+    active = false;
+    goto("/admin");
+  };
 
   // console.log($currentUser);
 
   const btnClick = () => (active = !active);
-  const adminClick = () => (active = !active);
 </script>
 
 <style>
