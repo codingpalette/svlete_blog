@@ -1,4 +1,30 @@
+<script context="module">
+  export function preload({ params, query }) {
+    // the `slug` parameter is available because
+    // this file is called [slug].svelte
+    return this.fetch(`https://my-blog-7d61e.firebaseio.com/words.json`)
+      .then(r => r.json())
+      .then(slugWithPostObject => {
+        let posts = Object.keys(slugWithPostObject) // ["slug1","slug2"...]
+          .map(slug => slugWithPostObject[slug]);
+        console.log(posts);
+        return { posts };
+      });
+    // console.log(res.json());
+    // const data = res.json();
+    // console.log(data);
+    // return { post: data };
+    // if (res.status === 200) {
+
+    // } else {
+    //   this.error(res.status, data.message);
+    // }
+  }
+</script>
+
 <script>
+  export let posts;
+  console.log(posts);
   import { goto } from "@sapper/app";
   import { onMount, beforeUpdate, afterUpdate } from "svelte";
   import { firebase } from "@firebase/app";
@@ -25,7 +51,7 @@
   let scrollStart = true;
   let notPage = false;
   let getNum = 20;
-  let isLoading = true;
+  let isLoading = false;
   const Skeletons = [
     1,
     2,
@@ -202,7 +228,9 @@
   </div>
 {:else if !notPage}
   <div class="main_container home_container">
-
+    {#each posts as post}
+      <div>{post}</div>
+    {/each}
     {#each $items as item}
       <Col sm="12" md="12" lg="6" xl="4" class="main_card_box">
         <Card class="mb-4 shadow border-0 rounded-lg ">
