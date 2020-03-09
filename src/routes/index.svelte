@@ -2,18 +2,21 @@
   import { firestore } from "./../firebase";
   export async function preload(page, session) {
     let db = await firestore();
-    let fbList = await db
+    let res = await db
       .collection("docs")
       .orderBy("createdAt", "desc")
       .limit(20)
       .get();
-    return { list: fbList.docs.map(e => e.data()) };
+    return {
+      list: res.docs.map(e => e.data()),
+      last: res.docs[res.docs.length - 1]
+    };
   }
 </script>
 
 <script>
   export let list;
-  console.log(list);
+  export let last;
   import { goto } from "@sapper/app";
   import { onMount, beforeUpdate, afterUpdate } from "svelte";
   // import { firebase } from "@firebase/app";
@@ -23,7 +26,6 @@
   import Header from "../components/Header.svelte";
   import TransitionWrapper from "../components/TransitionWrapper.svelte";
   import Welcome from "../components/Welcome.svelte";
-  import Skeleton from "../components/Skeleton.svelte";
 
   // sveltestrap
   import Button from "sveltestrap/src/Button.svelte";
@@ -39,30 +41,6 @@
   let innerWidth;
   let scrollStart = true;
   let notPage = false;
-  let getNum = 20;
-  let isLoading = false;
-  const Skeletons = [
-    1,
-    2,
-    3,
-    4,
-    5,
-    6,
-    7,
-    8,
-    9,
-    10,
-    11,
-    12,
-    13,
-    14,
-    15,
-    16,
-    17,
-    18,
-    19,
-    20
-  ];
 
   const handleScroll = e => {
     // console.log(scrollY);
@@ -85,7 +63,7 @@
         .collection("docs")
         .orderBy("createdAt", "desc")
         .startAfter(data)
-        .limit(getNum)
+        .limit(20)
         .get();
       // console.log(res);
       const plusItems = res.docs.map(e => e.data());
@@ -97,33 +75,13 @@
     }
   };
 
-  onMount(async () => {
-    try {
-      if (innerWidth >= 2500) {
-        getNum = 30;
-      }
-
-      // console.log(res);
-      if ($items.length < 1) {
-        const res = await firebase
-          .firestore()
-          .collection("docs")
-          .orderBy("createdAt", "desc")
-          .limit(getNum)
-          .get();
-        $items = res.docs.map(e => e.data());
-        $LastPost = res.docs[res.docs.length - 1];
-      }
-      isLoading = false;
-
-      if ($items.length === 0) {
-        notPage = true;
-      }
-      // console.log($items);
-    } catch (e) {
-      // console.log(e);
-    }
-  });
+  if ($items.length < 1) {
+    $items = list;
+    $LastPost = last;
+  }
+  if ($items.length === 0) {
+    notPage = true;
+  }
 </script>
 
 <style>
@@ -209,17 +167,8 @@
 
 <Header />
 
-{#if isLoading}
+{#if !notPage}
   <div class="main_container home_container">
-    {#each Skeletons as item}
-      <Skeleton />
-    {/each}
-  </div>
-{:else if !notPage}
-  <div class="main_container home_container">
-    {#each list as post}
-      <div>{post.title}</div>
-    {/each}
     {#each $items as item}
       <Col sm="12" md="12" lg="6" xl="4" class="main_card_box">
         <Card class="mb-4 shadow border-0 rounded-lg ">
