@@ -41,6 +41,7 @@
   let innerWidth;
   let scrollStart = true;
   let notPage = false;
+  let isLoading = true;
 
   const handleScroll = e => {
     // console.log(scrollY);
@@ -82,6 +83,10 @@
   if ($items.length === 0) {
     notPage = true;
   }
+
+  onMount(() => {
+    isLoading = false;
+  });
 </script>
 
 <style>
@@ -167,37 +172,39 @@
 
 <Header />
 
-{#if !notPage}
-  <div class="main_container home_container">
-    {#each $items as item}
-      <Col sm="12" md="12" lg="6" xl="4" class="main_card_box">
-        <Card class="mb-4 shadow border-0 rounded-lg ">
-          <a href={`post/${item.category}/${item.url}`} class="main_card">
-            <div class="card_title_box">
-              <h2>{item.title}</h2>
-              <div class="sub_box">
-                <div class="sub_content">
-                  <i class="far fa-calendar" />
-                  <span>작성일 {item.date}</span>
-                </div>
-                <div class="sub_content">
-                  <i class="fas fa-th-list" />
-                  <span>카테고리 {item.category}</span>
+{#if !isLoading}
+  {#if !notPage}
+    <div class="main_container home_container">
+      {#each list as item}
+        <Col sm="12" md="12" lg="6" xl="4" class="main_card_box">
+          <Card class="mb-4 shadow border-0 rounded-lg ">
+            <a href={`post/${item.category}/${item.url}`} class="main_card">
+              <div class="card_title_box">
+                <h2>{item.title}</h2>
+                <div class="sub_box">
+                  <div class="sub_content">
+                    <i class="far fa-calendar" />
+                    <span>작성일 {item.date}</span>
+                  </div>
+                  <div class="sub_content">
+                    <i class="fas fa-th-list" />
+                    <span>카테고리 {item.category}</span>
+                  </div>
                 </div>
               </div>
-            </div>
-            <CardBody>
-              <CardText class="text-dark">{item.description}</CardText>
-            </CardBody>
-          </a>
-        </Card>
-      </Col>
-    {/each}
-  </div>
-{:else}
-  <div class="main_container">
-    <Welcome>
-      <h1 slot="title">포스트 준비중입니다.</h1>
-    </Welcome>
-  </div>
+              <CardBody>
+                <CardText class="text-dark">{item.description}</CardText>
+              </CardBody>
+            </a>
+          </Card>
+        </Col>
+      {/each}
+    </div>
+  {:else}
+    <div class="main_container">
+      <Welcome>
+        <h1 slot="title">포스트 준비중입니다.</h1>
+      </Welcome>
+    </div>
+  {/if}
 {/if}
