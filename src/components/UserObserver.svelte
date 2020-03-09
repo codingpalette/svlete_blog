@@ -1,6 +1,5 @@
 <script>
   import { onMount } from "svelte";
-  import { firebase } from "@firebase/app";
   import { currentUser, isLoadComplete } from "../store/user";
 
   const userState = async user => {

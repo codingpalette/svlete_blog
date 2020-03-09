@@ -12,7 +12,10 @@ const mode = process.env.NODE_ENV;
 const dev = mode === 'development';
 const legacy = !!process.env.SAPPER_LEGACY_BUILD;
 
-const onwarn = (warning, onwarn) => (warning.code === 'CIRCULAR_DEPENDENCY' && /[/\\]@sapper[/\\]/.test(warning.message)) || onwarn(warning);
+const onwarn = (warning, onwarn) =>
+  (warning.code === 'CIRCULAR_DEPENDENCY' &&
+    /[/\\]@sapper[/\\]/.test(warning.message)) ||
+  onwarn(warning);
 
 export default {
   client: {
@@ -37,8 +40,16 @@ export default {
           // left-hand side can be an absolute path, a path
           // relative to the current directory, or the name
           // of a module in node_modules
-          'node_modules/idb/build/idb.js': ['openDb']
-          // 'node_modules/firebase/dist/index.cjs.js': ['initializeApp', 'firestore']
+          'node_modules/idb/build/idb.js': ['openDb', 'deleteDb'],
+          'node_modules/firebase/dist/index.cjs.js': [
+            'initializeApp',
+            'auth',
+            'firestore',
+            'database',
+            'functions',
+            'storage',
+            'analytics'
+          ]
         }
       }),
       json(),
@@ -94,7 +105,10 @@ export default {
       commonjs(),
       json()
     ],
-    external: Object.keys(pkg.dependencies).concat(require('module').builtinModules || Object.keys(process.binding('natives'))),
+    external: Object.keys(pkg.dependencies).concat(
+      require('module').builtinModules ||
+        Object.keys(process.binding('natives'))
+    ),
 
     onwarn
   },

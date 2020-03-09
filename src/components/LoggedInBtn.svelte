@@ -2,7 +2,6 @@
   import { goto } from "@sapper/app";
   import { onMount, onDestroy } from "svelte";
   import { fly } from "svelte/transition";
-  import { firebase } from "@firebase/app";
   import { currentUser, isLoadComplete } from "../store/user";
 
   let active = false;

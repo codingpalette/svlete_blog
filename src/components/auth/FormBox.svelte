@@ -1,7 +1,6 @@
 <script>
   export let MyUrl;
   import { goto } from "@sapper/app";
-  import { firebase } from "@firebase/app";
 
   // sveltestrap
   import Input from "sveltestrap/src/Input.svelte";

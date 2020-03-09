@@ -1,6 +1,5 @@
 <script>
   import { goto } from "@sapper/app";
-  import { firebase } from "@firebase/app";
 
   // sveltestrap
   import Button from "sveltestrap/src/Button.svelte";

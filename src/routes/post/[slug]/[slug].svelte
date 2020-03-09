@@ -9,7 +9,6 @@
   export let path;
   import { goto } from "@sapper/app";
   import { onMount } from "svelte";
-  import { firebase } from "@firebase/app";
   import { items } from "../../../store/homePost";
 
   import Header from "../../../components/Header.svelte";

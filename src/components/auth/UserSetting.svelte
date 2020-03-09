@@ -2,7 +2,6 @@
   import { goto } from "@sapper/app";
   import { fly } from "svelte/transition";
   import { currentUser, isLoadComplete } from "../../store/user";
-  import { firebase } from "@firebase/app";
 
   import Button from "sveltestrap/src/Button.svelte";
 

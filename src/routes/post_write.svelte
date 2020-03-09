@@ -17,7 +17,6 @@
   import { goto } from "@sapper/app";
   import { onMount, beforeUpdate, afterUpdate } from "svelte";
   import { fly } from "svelte/transition";
-  import { firebase } from "@firebase/app";
   import { items, LastPost } from "../store/homePost";
   import { currentUser, isLoadComplete } from "../store/user";
 
