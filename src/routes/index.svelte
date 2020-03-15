@@ -39,4 +39,8 @@
 
 <Header />
 
-<div class="main_container">fdfsfsdf</div>
+<div class="main_container">
+  <Welcome>
+    <h1 slot="title">메인 페이지 준비중입니다.</h1>
+  </Welcome>
+</div>
