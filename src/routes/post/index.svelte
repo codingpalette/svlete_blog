@@ -77,11 +77,6 @@
   onMount(() => {
     isLoading = false;
   });
-
-  const PostLinkClick = link => {
-    console.log(link);
-    goto(link);
-  };
 </script>
 
 <style>
@@ -205,10 +200,7 @@
   {#each $items as item}
     <div class="main_card_box">
       <div class="card_item shadow border-0 rounded-lg mb-4">
-        <a
-          href="post"
-          class="main_card"
-          on:click|preventDefault={PostLinkClick(`post/${item.category}/${item.url}`)}>
+        <a rel="prefetch" href={item.slug} class="main_card">
           <div class="card_title_box">
             <h2>{item.title}</h2>
             <div class="sub_box">

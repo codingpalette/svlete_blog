@@ -120,6 +120,7 @@
     console.log(content);
     // return;
     // const content = tuiEditor.getMarkdown();
+    const slug = `post/${category}/${url}`;
     const id = category + "_" + url;
 
     try {
@@ -128,7 +129,17 @@
         .firestore()
         .collection("docs")
         .doc(id)
-        .set({ title, category, url, description, tags, createdAt, date, id });
+        .set({
+          title,
+          category,
+          url,
+          description,
+          tags,
+          createdAt,
+          date,
+          id,
+          slug
+        });
 
       const cid = id + "/content/last";
 

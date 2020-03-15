@@ -1,5 +1,5 @@
 <script context="module">
-  import { firestore } from "./../../../firebase";
+  import { firestore } from "./../../../../firebase";
   export async function preload(page, session) {
     const { path } = page;
     const pathname = path.split("/");
@@ -22,11 +22,11 @@
   export let docRead;
   import { goto } from "@sapper/app";
   import { onMount } from "svelte";
-  import { items } from "../../../store/homePost";
+  import { items } from "../../../../store/homePost";
 
-  import Header from "../../../components/Header.svelte";
-  import PostPopup from "../../../components/post/PostPopup.svelte";
-  import TransitionWrapper from "../../../components/TransitionWrapper.svelte";
+  import Header from "../../../../components/Header.svelte";
+  import PostPopup from "../../../../components/post/PostPopup.svelte";
+  import TransitionWrapper from "../../../../components/TransitionWrapper.svelte";
 
   import Container from "sveltestrap/src/Container.svelte";
   import Button from "sveltestrap/src/Button.svelte";
