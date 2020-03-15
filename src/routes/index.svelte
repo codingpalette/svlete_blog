@@ -1,6 +1,8 @@
 <script>
   import { goto } from "@sapper/app";
   import { onMount, beforeUpdate, afterUpdate } from "svelte";
+  import Swiper from "swiper";
+  import "swiper/css/swiper.min.css";
   // import { firebase } from "@firebase/app";
   import { currentUser } from "../store/user";
 
@@ -13,10 +15,33 @@
   let innerWidth;
 
   const handleScroll = e => {};
+
+  onMount(() => {
+    console.log("aaaaa");
+    const mySwiper = new Swiper(".swiper-container", {
+      /* ... */
+    });
+  });
 </script>
 
 <style>
+  .swiper-container {
+    width: 100%;
+    height: 100%;
+  }
+  .swiper-slide {
+    text-align: center;
+    font-size: 18px;
+    background: #fff;
 
+    /* Center slide text vertically */
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+  }
 </style>
 
 <svelte:head>
@@ -40,7 +65,21 @@
 <Header />
 
 <div class="main_container">
-  <Welcome>
+  <div class="swiper-container">
+    <div class="swiper-wrapper">
+      <div class="swiper-slide">Slide 1</div>
+      <div class="swiper-slide">Slide 2</div>
+      <div class="swiper-slide">Slide 3</div>
+      <div class="swiper-slide">Slide 4</div>
+      <div class="swiper-slide">Slide 5</div>
+      <div class="swiper-slide">Slide 6</div>
+      <div class="swiper-slide">Slide 7</div>
+      <div class="swiper-slide">Slide 8</div>
+      <div class="swiper-slide">Slide 9</div>
+      <div class="swiper-slide">Slide 10</div>
+    </div>
+  </div>
+  <!-- <Welcome>
     <h1 slot="title">메인 페이지 준비중입니다.</h1>
-  </Welcome>
+  </Welcome> -->
 </div>
